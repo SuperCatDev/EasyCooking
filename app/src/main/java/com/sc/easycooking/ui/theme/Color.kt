@@ -1,4 +1,4 @@
-package com.example.easycooking.ui.theme
+package com.sc.easycooking.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

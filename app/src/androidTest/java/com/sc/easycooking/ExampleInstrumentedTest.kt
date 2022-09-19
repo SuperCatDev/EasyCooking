@@ -1,4 +1,4 @@
-package com.example.easycooking
+package com.sc.easycooking
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

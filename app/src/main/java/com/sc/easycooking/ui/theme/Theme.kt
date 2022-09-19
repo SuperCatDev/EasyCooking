@@ -1,4 +1,4 @@
-package com.example.easycooking.ui.theme
+package com.sc.easycooking.ui.theme
 
 import android.app.Activity
 import android.os.Build

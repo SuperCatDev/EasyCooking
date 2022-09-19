@@ -1,4 +1,4 @@
-package com.example.easycooking
+package com.sc.easycooking
 
 import org.junit.Test
 
