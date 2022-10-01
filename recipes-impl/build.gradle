@@ -30,10 +30,18 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion "1.2.0"
+    }
 }
 
 dependencies {
-    project(":recipes-api")
+    implementation project(":core:navigation")
+
+    implementation project(":recipes-api")
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation "androidx.compose.ui:ui:$compose_version"

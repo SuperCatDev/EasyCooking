@@ -16,3 +16,4 @@ rootProject.name = "EasyCooking"
 include ':app'
 include ':recipes-impl'
 include ':recipes-api'
+include ':core:navigation'
