@@ -54,7 +54,5 @@ fun Greeting(name: String) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    EasyCookingTheme {
-        WellnessScreen()
-    }
+    EcApp()
 }
