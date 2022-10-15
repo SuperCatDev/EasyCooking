@@ -16,10 +16,11 @@
 
 package com.sc.easycooking.db.database.dao
 
+import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import com.sc.easycooking.db.database.model.IngredientEntity
+import androidx.room.Query
 import com.sc.easycooking.db.database.model.RecipeEntity
 
 @Dao
@@ -27,6 +28,6 @@ interface RecipesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addRecipe(recipe: RecipeEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addIngredient(ingredient: IngredientEntity)
+    @Query("SELECT * FROM recipes")
+    fun observeAllRecipes(): DataSource.Factory<Int, RecipeEntity>
 }

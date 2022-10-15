@@ -1,8 +1,5 @@
 package com.sc.easycooking.recipes.api.navigation.models
 
-@JvmInline
-value class IngredientId(val id: Int)
-
 enum class QuantityType(val id: Int) {
     ML(0),
     LITRES(1),
@@ -12,7 +9,7 @@ enum class QuantityType(val id: Int) {
 }
 
 data class IngredientModel(
-    val id: IngredientId,
     val name: String,
     val quantity: QuantityType,
+    val amount: Int,
 )

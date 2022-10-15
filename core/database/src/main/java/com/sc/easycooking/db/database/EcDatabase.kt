@@ -20,26 +20,20 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.sc.easycooking.db.database.dao.RecipesDao
-import com.sc.easycooking.db.database.model.IngredientEntity
 import com.sc.easycooking.db.database.model.RecipeEntity
 import com.sc.easycooking.db.database.util.IngredientsConverter
-import com.sc.easycooking.db.database.util.QuantityConverter
-import com.sc.easycooking.db.database.util.RecipeCategoryConverter
 import com.sc.easycooking.db.database.util.RecipeTagsListConverter
 
 @Database(
     entities = [
-        IngredientEntity::class,
         RecipeEntity::class,
     ],
     version = 1,
     exportSchema = true,
 )
 @TypeConverters(
-    RecipeCategoryConverter::class,
     RecipeTagsListConverter::class,
     IngredientsConverter::class,
-    QuantityConverter::class,
 )
 abstract class EcDatabase : RoomDatabase() {
     abstract fun recipesDao(): RecipesDao

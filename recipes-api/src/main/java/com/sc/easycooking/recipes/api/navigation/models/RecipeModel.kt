@@ -1,8 +1,5 @@
 package com.sc.easycooking.recipes.api.navigation.models
 
-@JvmInline
-value class RecipeId(val id: Int)
-
 enum class RecipeCategory(val id: Int) {
     COLD_APPETIZER(0),
     HOT_APPETIZER(1),
@@ -24,12 +21,12 @@ enum class RecipeTag(val id: Int) {
 }
 
 data class RecipeModel(
-    val id: RecipeId,
+    val id: Int,
     val name: String,
     val recipe: String,
     val creationDate: Long,
     val cookingTime: Long,
     val category: RecipeCategory,
     val tags: List<RecipeTag>,
-    val ingredients: Map<IngredientModel, Int>,
+    val ingredients: List<IngredientModel>,
 )

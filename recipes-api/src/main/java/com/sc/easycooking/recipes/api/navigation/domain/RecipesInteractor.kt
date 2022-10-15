@@ -1,7 +1,9 @@
 package com.sc.easycooking.recipes.api.navigation.domain
 
+import androidx.paging.PagingData
 import com.sc.easycooking.recipes.api.navigation.models.RecipeModel
+import kotlinx.coroutines.flow.Flow
 
 interface RecipesInteractor {
-    suspend fun getAllRecipes(): List<RecipeModel>
+    fun observeAllRecipes(): Flow<PagingData<RecipeModel>>
 }
