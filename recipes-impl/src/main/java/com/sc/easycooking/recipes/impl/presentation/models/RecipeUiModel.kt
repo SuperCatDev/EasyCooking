@@ -14,4 +14,5 @@ internal data class RecipeUiModel(
 internal data class RecipeUiModelShort(
     val name: String,
     val category: String,
+    val ingredients: List<IngredientUiModel>,
 )

@@ -24,4 +24,12 @@ internal class RecipesListViewModel @Inject constructor(
                 it.map(RecipeModel::toUiModelShort)
             }
     }
+
+    fun addClicked() {
+
+    }
+
+    fun clickedAt(item: RecipeUiModelShort) {
+
+    }
 }

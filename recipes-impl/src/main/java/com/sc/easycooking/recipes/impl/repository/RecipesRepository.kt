@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.sc.easycooking.db.database.dao.RecipesDao
+import com.sc.easycooking.db.database.model.IngredientDbModel
 import com.sc.easycooking.db.database.model.RecipeEntity
 import com.sc.easycooking.recipes.api.navigation.models.RecipeModel
 import com.sc.easycooking.recipes.impl.repository.mappers.toDomainModel
@@ -25,7 +26,18 @@ internal class RecipesRepository @Inject constructor(private val recipesDao: Rec
                     cookingTime = 5,
                     categoryId = 1,
                     tagIds = emptyList(),
-                    ingredients = emptyList()
+                    ingredients = listOf(
+                        IngredientDbModel(
+                            name = "Tomatos",
+                            quantityType = 3,
+                            amount = 4,
+                        ),
+                        IngredientDbModel(
+                            name = "Onion",
+                            quantityType = 4,
+                            amount = 1,
+                        )
+                    )
                 )
             )
         }
