@@ -9,7 +9,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,9 +36,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -99,21 +101,43 @@ private fun LazyStaggeredGridScope.recipeListScreen(
     lazyItems: LazyPagingItems<RecipeUiModelShort>,
     viewModel: RecipesListViewModel
 ) {
+
     items(lazyItems) { item: RecipeUiModelShort? ->
+        val selectedItems = viewModel.observeSelectedItems().collectAsState()
+
+        val selected = selectedItems.value.contains(item)
+
+        val roundSize = 12.dp
+
         Box(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    shape = RoundedCornerShape(12.dp)
+                .shadow(
+                    elevation = if (selected) 5.dp else 0.dp,
+                    shape = RoundedCornerShape(roundSize),
                 )
-                .clip(RoundedCornerShape(12.dp))
-                .clickable(enabled = item != null) {
-                    item?.let {
-                        viewModel.clickedAt(it)
+                .background(
+                    color = MaterialTheme.colorScheme.background,
+                    shape = RoundedCornerShape(roundSize),
+                )
+                .border(
+                    width = if (selected) 2.dp else 1.dp,
+                    color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                    shape = RoundedCornerShape(roundSize),
+                )
+                .clip(RoundedCornerShape(roundSize))
+                .combinedClickable(
+                    enabled = item != null,
+                    onClick = {
+                        item?.let {
+                            viewModel.clickedAt(it)
+                        }
+                    },
+                    onLongClick = {
+                        item?.let {
+                            viewModel.longClickedAt(it)
+                        }
                     }
-                },
+                ),
             contentAlignment = Alignment.TopStart,
         ) {
             Column(

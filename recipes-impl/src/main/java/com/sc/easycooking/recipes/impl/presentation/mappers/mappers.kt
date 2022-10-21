@@ -9,6 +9,7 @@ import com.sc.easycooking.recipes.impl.presentation.models.RecipeUiModelShort
 
 internal fun RecipeModel.toUiModelShort(context: Context): RecipeUiModelShort {
     return RecipeUiModelShort(
+        id = id,
         name = name,
         category = category.name,
         ingredients = ingredients.map {
