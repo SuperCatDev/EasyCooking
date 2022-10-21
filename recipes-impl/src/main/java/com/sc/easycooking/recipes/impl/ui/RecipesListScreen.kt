@@ -41,7 +41,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -104,9 +106,8 @@ private fun LazyStaggeredGridScope.recipeListScreen(
 
     items(lazyItems) { item: RecipeUiModelShort? ->
         val selectedItems = viewModel.observeSelectedItems().collectAsState()
-
         val selected = selectedItems.value.contains(item)
-
+        val hapticFeedback = LocalHapticFeedback.current
         val roundSize = 12.dp
 
         Box(
@@ -133,6 +134,9 @@ private fun LazyStaggeredGridScope.recipeListScreen(
                         }
                     },
                     onLongClick = {
+                        hapticFeedback.performHapticFeedback(
+                            HapticFeedbackType.LongPress
+                        )
                         item?.let {
                             viewModel.longClickedAt(it)
                         }
