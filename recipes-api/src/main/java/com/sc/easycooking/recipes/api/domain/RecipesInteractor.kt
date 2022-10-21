@@ -1,7 +1,7 @@
-package com.sc.easycooking.recipes.api.navigation.domain
+package com.sc.easycooking.recipes.api.domain
 
 import androidx.paging.PagingData
-import com.sc.easycooking.recipes.api.navigation.models.RecipeModel
+import com.sc.easycooking.recipes.api.models.RecipeModel
 import kotlinx.coroutines.flow.Flow
 
 interface RecipesInteractor {

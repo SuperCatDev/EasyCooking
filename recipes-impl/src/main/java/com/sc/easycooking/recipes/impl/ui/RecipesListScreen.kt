@@ -5,6 +5,7 @@
 
 package com.sc.easycooking.recipes.impl.ui
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,10 +15,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumedWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
@@ -36,11 +39,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.sc.easycooking.recipes.impl.R
 import com.sc.easycooking.recipes.impl.presentation.RecipesListViewModel
 import com.sc.easycooking.recipes.impl.presentation.models.RecipeUiModelShort
 import com.sc.easycooking.recipes.impl.ui.paging.items
@@ -70,8 +77,10 @@ internal fun RecipesListScreen(
 
         val lazyPagingItems = viewModel.observeAllRecipes().collectAsLazyPagingItems()
 
+        val configuration = LocalConfiguration.current
+
         LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
+            columns = StaggeredGridCells.Fixed(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2),
             contentPadding = PaddingValues(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -100,8 +109,10 @@ private fun LazyStaggeredGridScope.recipeListScreen(
                     shape = RoundedCornerShape(12.dp)
                 )
                 .clip(RoundedCornerShape(12.dp))
-                .also {
-                    if (item != null) it.clickable { viewModel.clickedAt(item) }
+                .clickable(enabled = item != null) {
+                    item?.let {
+                        viewModel.clickedAt(it)
+                    }
                 },
             contentAlignment = Alignment.TopStart,
         ) {
@@ -117,15 +128,26 @@ private fun LazyStaggeredGridScope.recipeListScreen(
                     )
                     item.ingredients.forEachIndexed { index, ingredient ->
                         Spacer(modifier = Modifier.height(if (index == 0) 16.dp else 2.dp))
-                        Text(
-                            text = "${ingredient.name} ${ingredient.amount}${ingredient.quantity}",
-                            Modifier.align(Alignment.Start),
-                            style = MaterialTheme.typography.bodySmall,
-                        )
+
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = ingredient.name,
+                                modifier = Modifier.weight(1f),
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+
+                            Text(
+                                text = "${ingredient.amount} ${ingredient.quantity}",
+                                modifier = Modifier.weight(1f),
+                                textAlign = TextAlign.End,
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
+
                     }
                 } else {
                     Text(
-                        text = "Loading",
+                        text = stringResource(id = R.string.recipe_item_loading),
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         style = MaterialTheme.typography.bodySmall
                     )

@@ -1,6 +1,6 @@
 package com.sc.easycooking.recipes.impl.presentation.models
 
-import com.sc.easycooking.recipes.api.navigation.models.RecipeTag
+import com.sc.easycooking.recipes.api.models.RecipeTag
 
 data class RecipeUiTag(
     val tag: RecipeTag,

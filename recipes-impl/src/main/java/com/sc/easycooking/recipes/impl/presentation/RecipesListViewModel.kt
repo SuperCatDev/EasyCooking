@@ -1,11 +1,12 @@
 package com.sc.easycooking.recipes.impl.presentation
 
+import android.app.Application
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.sc.easycooking.recipes.api.navigation.domain.RecipesInteractor
-import com.sc.easycooking.recipes.api.navigation.models.RecipeModel
+import com.sc.easycooking.recipes.api.domain.RecipesInteractor
 import com.sc.easycooking.recipes.impl.presentation.mappers.toUiModelShort
 import com.sc.easycooking.recipes.impl.presentation.models.RecipeUiModelShort
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,11 +18,14 @@ import javax.inject.Inject
 internal class RecipesListViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: RecipesInteractor,
-) : ViewModel() {
+    application: Application,
+) : AndroidViewModel(application) {
     fun observeAllRecipes(): Flow<PagingData<RecipeUiModelShort>> {
         return interactor.observeAllRecipes()
-            .map {
-                it.map(RecipeModel::toUiModelShort)
+            .map { pagingData ->
+                pagingData.map { model ->
+                    model.toUiModelShort(getApplication())
+                }
             }
     }
 
@@ -30,6 +34,6 @@ internal class RecipesListViewModel @Inject constructor(
     }
 
     fun clickedAt(item: RecipeUiModelShort) {
-
+        Log.e("VVV", "clicked on: $item")
     }
 }

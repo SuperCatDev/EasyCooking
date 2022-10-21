@@ -1,4 +1,4 @@
-package com.sc.easycooking.recipes.api.navigation.models
+package com.sc.easycooking.recipes.api.models
 
 enum class RecipeCategory(val id: Int) {
     COLD_APPETIZER(0),

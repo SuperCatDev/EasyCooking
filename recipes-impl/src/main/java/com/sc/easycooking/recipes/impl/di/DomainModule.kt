@@ -1,6 +1,6 @@
 package com.sc.easycooking.recipes.impl.di
 
-import com.sc.easycooking.recipes.api.navigation.domain.RecipesInteractor
+import com.sc.easycooking.recipes.api.domain.RecipesInteractor
 import com.sc.easycooking.recipes.impl.domain.RecipesInteractorImpl
 import dagger.Binds
 import dagger.Module

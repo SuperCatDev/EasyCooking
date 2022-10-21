@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recipe_item_loading">Загрузка</string>
+
+    <string name="quantity_kg">kг.</string>
+    <string name="quantity_ml">мл.</string>
+    <string name="quantity_g">г.</string>
+    <string name="quantity_l">л.</string>
+
+    <string name="quantity_declaration_kg">килограмм</string>
+    <string name="quantity_declaration_ml">милилитров</string>
+    <string name="quantity_declaration_g">грамм</string>
+    <string name="quantity_declaration_l">литров</string>
+    <string name="quantity_declaration_amount">штук</string>
+
+    <string name="tag_meat">Мясо</string>
+    <string name="tag_fish">Рыба</string>
+    <string name="tag_seafood">Морепродукты</string>
+    <string name="tag_vegetarian">Вегетарианское</string>
+    <string name="tag_vegetables">Овощи</string>
+    <string name="tag_fruits">Фрукты</string>
+    <string name="tag_bakery">Выпечка</string>
+
+    <string name="category_cold_appetizer">Холодная закуска</string>
+    <string name="category_hot_appetizer">Горячая закауска</string>
+    <string name="category_soup">Суп</string>
+    <string name="category_salad">Салат</string>
+    <string name="category_main">Основное</string>
+    <string name="category_desert">Десерт</string>
+    <string name="category_cheese">Сыр</string>
+</resources>

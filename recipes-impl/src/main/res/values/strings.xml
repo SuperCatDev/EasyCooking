@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="recipe_item_loading">Loading</string>
+
+    <string name="quantity_kg">kg.</string>
+    <string name="quantity_ml">ml.</string>
+    <string name="quantity_g">g.</string>
+    <string name="quantity_l">l.</string>
+
+    <string name="quantity_declaration_kg">kilograms</string>
+    <string name="quantity_declaration_ml">milliliters</string>
+    <string name="quantity_declaration_g">grams</string>
+    <string name="quantity_declaration_l">liters</string>
+    <string name="quantity_declaration_amount">items</string>
+
+    <string name="tag_meat">Meat</string>
+    <string name="tag_fish">Fish</string>
+    <string name="tag_seafood">Seafood</string>
+    <string name="tag_vegetarian">Vegetarian</string>
+    <string name="tag_vegetables">Vegetables</string>
+    <string name="tag_fruits">Fruits</string>
+    <string name="tag_bakery">Bakery</string>
+
+    <string name="category_cold_appetizer">Cold appetizer</string>
+    <string name="category_hot_appetizer">Hot appetizer</string>
+    <string name="category_soup">Soup</string>
+    <string name="category_salad">Salad</string>
+    <string name="category_main">Main</string>
+    <string name="category_desert">Desert</string>
+    <string name="category_cheese">Cheese</string>
+</resources>
