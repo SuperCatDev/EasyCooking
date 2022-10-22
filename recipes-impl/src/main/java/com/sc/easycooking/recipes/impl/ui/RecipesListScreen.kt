@@ -29,12 +29,20 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -51,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.sc.easycooking.recipes.impl.R
 import com.sc.easycooking.recipes.impl.presentation.RecipesListViewModel
 import com.sc.easycooking.recipes.impl.presentation.models.RecipeUiModelShort
@@ -69,12 +78,38 @@ internal fun RecipesListScreen(
     modifier: Modifier = Modifier,
     viewModel: RecipesListViewModel,
 ) {
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setNavigationBarColor(
+        color = MaterialTheme.colorScheme.surfaceColorAtElevation(BottomAppBarDefaults.ContainerElevation)
+    )
+
     Scaffold(
         modifier = modifier,
-        floatingActionButton = {
-            FloatingActionButton(onClick = { viewModel.addClicked() }) {
-                Icon(Icons.Filled.Add, contentDescription = "Add new recipe")
-            }
+        bottomBar = {
+            BottomAppBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
+                actions = {
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Default.Search, contentDescription = "Add new recipe")
+                    }
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Default.Delete, contentDescription = "Add new recipe")
+                    }
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Default.Favorite, contentDescription = "Add new recipe")
+                    }
+                },
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = { viewModel.addClicked() },
+                        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+                    ) {
+                        Icon(Icons.Filled.Add, contentDescription = "Add new recipe")
+                    }
+                }
+            )
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { innerPadding ->
