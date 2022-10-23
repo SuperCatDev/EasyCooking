@@ -2,7 +2,7 @@
 <resources>
     <string name="recipe_item_loading">Загрузка</string>
 
-    <string name="quantity_kg">kг.</string>
+    <string name="quantity_kg">кг.</string>
     <string name="quantity_ml">мл.</string>
     <string name="quantity_g">г.</string>
     <string name="quantity_l">л.</string>

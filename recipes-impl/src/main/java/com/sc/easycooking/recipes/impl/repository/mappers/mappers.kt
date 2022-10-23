@@ -17,7 +17,7 @@ fun RecipeModel.toDbModel(): RecipeEntity {
         cookingTime = cookingTime,
         categoryId = category.id,
         tagIds = tags.map { it.id },
-        ingredients = ingredients.map(com.sc.easycooking.recipes.api.models.IngredientModel::toDbModel)
+        ingredients = ingredients.map(IngredientModel::toDbModel)
     )
 }
 

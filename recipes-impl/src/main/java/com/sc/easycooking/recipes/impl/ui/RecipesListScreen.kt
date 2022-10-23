@@ -1,11 +1,18 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class, ExperimentalAnimationApi::class
 )
 
 package com.sc.easycooking.recipes.impl.ui
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,22 +36,29 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -83,6 +97,8 @@ internal fun RecipesListScreen(
         color = MaterialTheme.colorScheme.surfaceColorAtElevation(BottomAppBarDefaults.ContainerElevation)
     )
 
+    val selectedItems = viewModel.observeSelectedItems().collectAsState()
+
     Scaffold(
         modifier = modifier,
         bottomBar = {
@@ -91,15 +107,7 @@ internal fun RecipesListScreen(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
                 actions = {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.Search, contentDescription = "Add new recipe")
-                    }
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Add new recipe")
-                    }
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.Favorite, contentDescription = "Add new recipe")
-                    }
+                    DrawActions(viewModel, selectedItems.value)
                 },
                 floatingActionButton = {
                     FloatingActionButton(
@@ -129,19 +137,19 @@ internal fun RecipesListScreen(
                 .fillMaxSize()
                 .testTag("recipeList:feed"),
         ) {
-            recipeListScreen(lazyPagingItems, viewModel)
+            recipeListScreen(lazyPagingItems, selectedItems.value, viewModel)
         }
     }
 }
 
 private fun LazyStaggeredGridScope.recipeListScreen(
     lazyItems: LazyPagingItems<RecipeUiModelShort>,
+    selectedItems: Set<RecipeUiModelShort>,
     viewModel: RecipesListViewModel
 ) {
 
     items(lazyItems) { item: RecipeUiModelShort? ->
-        val selectedItems = viewModel.observeSelectedItems().collectAsState()
-        val selected = selectedItems.value.contains(item)
+        val selected = selectedItems.contains(item)
         val hapticFeedback = LocalHapticFeedback.current
         val roundSize = 12.dp
 
@@ -216,6 +224,144 @@ private fun LazyStaggeredGridScope.recipeListScreen(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun DrawActions(
+    viewModel: RecipesListViewModel,
+    selectedItems: Set<RecipeUiModelShort>
+) {
+    val shouldShowSelected = selectedItems.isNotEmpty()
+    val shouldShowCommon = !shouldShowSelected
+
+    val selectedBlockVisibilityState = remember {
+        MutableTransitionState(shouldShowSelected)
+    }
+
+    val commonBlockVisibilityState = remember {
+        MutableTransitionState(shouldShowCommon)
+    }
+
+    val selectedItemsCount = remember {
+        mutableStateOf(0)
+    }
+
+    if (shouldShowSelected) {
+        selectedItemsCount.value = selectedItems.size
+    }
+
+    when {
+        !selectedBlockVisibilityState.isIdle -> {
+            SelectedStateBlock(selectedBlockVisibilityState, selectedItemsCount, viewModel)
+        }
+        !commonBlockVisibilityState.isIdle -> {
+            CommonStateBlock(commonBlockVisibilityState)
+        }
+        commonBlockVisibilityState.currentState && !shouldShowCommon -> {
+            commonBlockVisibilityState.targetState = false
+
+            CommonStateBlock(commonBlockVisibilityState)
+        }
+        selectedBlockVisibilityState.currentState && !shouldShowSelected -> {
+            selectedBlockVisibilityState.targetState = false
+
+            SelectedStateBlock(selectedBlockVisibilityState, selectedItemsCount, viewModel)
+        }
+
+        shouldShowCommon -> {
+            commonBlockVisibilityState.targetState = true
+
+            CommonStateBlock(commonBlockVisibilityState)
+        }
+
+        shouldShowSelected -> {
+            selectedBlockVisibilityState.targetState = true
+
+            SelectedStateBlock(selectedBlockVisibilityState, selectedItemsCount, viewModel)
+        }
+    }
+}
+
+@Composable
+private fun SelectedStateBlock(
+    visibilityState: MutableTransitionState<Boolean>,
+    selectedItemsState: MutableState<Int>,
+    viewModel: RecipesListViewModel,
+) {
+
+    val enterTransition = scaleIn() + fadeIn(
+        // Fade in with the initial alpha of 0.3f.
+        initialAlpha = 0.3f
+    )
+
+    val exitTransition = scaleOut() + fadeOut()
+
+    AnimatedVisibility(
+        visibleState = visibilityState,
+        enter = enterTransition,
+        exit = exitTransition,
+    ) {
+        Button(
+            onClick = { viewModel.clearSelection() },
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = LocalContentColor.current,
+            ),
+            contentPadding = PaddingValues(horizontal = 12.dp),
+            modifier = Modifier
+                .padding(start = 12.dp)
+        ) {
+            Icon(Icons.Default.Clear, contentDescription = "Clear selection")
+            Text(
+                fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                text = selectedItemsState.value.toString(),
+                modifier = Modifier.padding(6.dp),
+            )
+        }
+    }
+
+    AnimatedVisibility(
+        visibleState = visibilityState,
+        enter = enterTransition,
+        exit = exitTransition,
+    ) {
+        IconButton(onClick = { }) {
+            Icon(Icons.Default.Delete, contentDescription = "Delete recepies")
+        }
+    }
+
+    AnimatedVisibility(
+        visibleState = visibilityState,
+        enter = enterTransition,
+        exit = exitTransition,
+    ) {
+        IconButton(onClick = { }) {
+            Icon(Icons.Default.Favorite, contentDescription = "Add new recipe")
+        }
+    }
+}
+
+@Composable
+private fun CommonStateBlock(
+    visibilityState: MutableTransitionState<Boolean>,
+) {
+    val enterTransition = scaleIn() + fadeIn(
+        // Fade in with the initial alpha of 0.3f.
+        initialAlpha = 0.3f
+    )
+
+    val exitTransition = scaleOut() + fadeOut()
+
+    AnimatedVisibility(
+        visibleState = visibilityState,
+        enter = enterTransition,
+        exit = exitTransition,
+    ) {
+
+        IconButton(onClick = { }) {
+            Icon(Icons.Default.Search, contentDescription = "Add new recipe")
         }
     }
 }

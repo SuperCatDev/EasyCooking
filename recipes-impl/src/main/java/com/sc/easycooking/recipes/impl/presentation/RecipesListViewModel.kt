@@ -49,20 +49,24 @@ internal class RecipesListViewModel @Inject constructor(
 
     }
 
+    fun clearSelection() {
+        savedStateHandle[SelectedItemsContainer.CONTAINER_ID] = SelectedItemsContainer(emptySet())
+    }
+
     fun clickedAt(item: RecipeUiModelShort) {
         Log.e("VVV", "clicked on: $item")
     }
 
     fun longClickedAt(item: RecipeUiModelShort) {
-        val currentList = selectedItems.value.set.toMutableSet()
+        val currentSet = selectedItems.value.set.toMutableSet()
 
-        if (currentList.contains(item)) {
-            currentList.remove(item)
+        if (currentSet.contains(item)) {
+            currentSet.remove(item)
         } else {
-            currentList.add(item)
+            currentSet.add(item)
         }
 
-        savedStateHandle[SelectedItemsContainer.CONTAINER_ID] = SelectedItemsContainer(currentList)
+        savedStateHandle[SelectedItemsContainer.CONTAINER_ID] = SelectedItemsContainer(currentSet)
     }
 
     @Parcelize
