@@ -13,4 +13,8 @@ internal class RecipesInteractorImpl @Inject constructor(
     override fun observeAllRecipes(): Flow<PagingData<RecipeModel>> {
         return repository.observeAllRecipes()
     }
+
+    override suspend fun deleteRecipesByIds(ids: Set<Int>) {
+        repository.deleteRecipesByIds(ids)
+    }
 }

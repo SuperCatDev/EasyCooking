@@ -30,4 +30,7 @@ interface RecipesDao {
 
     @Query("SELECT * FROM recipes")
     fun observeAllRecipes(): DataSource.Factory<Int, RecipeEntity>
+
+    @Query("DELETE FROM recipes WHERE id in (:ids)")
+    suspend fun deleteByIds(ids: Set<Int>)
 }

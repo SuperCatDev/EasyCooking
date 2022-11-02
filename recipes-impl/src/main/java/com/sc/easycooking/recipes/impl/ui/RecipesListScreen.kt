@@ -276,7 +276,8 @@ private fun DrawActions(
             CommonStateBlock(commonBlockVisibilityState)
         }
 
-        shouldShowSelected -> {
+        //shouldShowSelected
+        else -> {
             selectedBlockVisibilityState.targetState = true
 
             SelectedStateBlock(selectedBlockVisibilityState, selectedItemsCount, viewModel)
@@ -327,8 +328,8 @@ private fun SelectedStateBlock(
         enter = enterTransition,
         exit = exitTransition,
     ) {
-        IconButton(onClick = { }) {
-            Icon(Icons.Default.Delete, contentDescription = "Delete recepies")
+        IconButton(onClick = { viewModel.deleteSelected() }) {
+            Icon(Icons.Default.Delete, contentDescription = "Delete")
         }
     }
 

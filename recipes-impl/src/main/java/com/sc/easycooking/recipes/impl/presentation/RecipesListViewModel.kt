@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
@@ -51,6 +52,15 @@ internal class RecipesListViewModel @Inject constructor(
 
     fun clearSelection() {
         savedStateHandle[SelectedItemsContainer.CONTAINER_ID] = SelectedItemsContainer(emptySet())
+    }
+
+    fun deleteSelected() {
+        viewModelScope.launch {
+            val idsToDelete = selectedItems.value.set.mapTo(mutableSetOf(), RecipeUiModelShort::id)
+            interactor.deleteRecipesByIds(idsToDelete)
+        }
+
+        clearSelection()
     }
 
     fun clickedAt(item: RecipeUiModelShort) {

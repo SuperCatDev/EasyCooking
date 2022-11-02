@@ -188,4 +188,8 @@ internal class RecipesRepository @Inject constructor(private val recipesDao: Rec
         )
 
     }
+
+    suspend fun deleteRecipesByIds(ids: Set<Int>) {
+        recipesDao.deleteByIds(ids)
+    }
 }
