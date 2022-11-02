@@ -55,7 +55,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -148,7 +148,7 @@ private fun LazyStaggeredGridScope.recipeListScreen(
     viewModel: RecipesListViewModel
 ) {
 
-    items(lazyItems) { item: RecipeUiModelShort? ->
+    items(lazyItems, key = { it.id }) { item: RecipeUiModelShort? ->
         val selected = selectedItems.contains(item)
         val hapticFeedback = LocalHapticFeedback.current
         val roundSize = 12.dp
@@ -287,7 +287,7 @@ private fun DrawActions(
 @Composable
 private fun SelectedStateBlock(
     visibilityState: MutableTransitionState<Boolean>,
-    selectedItemsState: MutableState<Int>,
+    selectedItemsState: State<Int>,
     viewModel: RecipesListViewModel,
 ) {
 
