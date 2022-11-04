@@ -1,6 +1,7 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
-    ExperimentalFoundationApi::class, ExperimentalAnimationApi::class
+    ExperimentalFoundationApi::class, ExperimentalAnimationApi::class,
+    ExperimentalAnimationApi::class
 )
 
 package com.sc.easycooking.recipes.impl.ui
@@ -9,10 +10,6 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -40,6 +37,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Button
@@ -73,6 +71,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.view_ext.anims.durationMiddle
+import com.example.view_ext.anims.fadeInDuration
+import com.example.view_ext.anims.fadeOutDuration
+import com.example.view_ext.anims.scaleInDuration
+import com.example.view_ext.anims.scaleOutDuration
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.sc.easycooking.recipes.impl.R
 import com.sc.easycooking.recipes.impl.presentation.RecipesListViewModel
@@ -292,12 +295,19 @@ private fun SelectedStateBlock(
     viewModel: RecipesListViewModel,
 ) {
 
-    val enterTransition = scaleIn() + fadeIn(
+    val enterTransition = scaleInDuration(
+        duration = durationMiddle,
+    ) + fadeInDuration(
+        duration = durationMiddle,
         // Fade in with the initial alpha of 0.3f.
         initialAlpha = 0.3f
     )
 
-    val exitTransition = scaleOut() + fadeOut()
+    val exitTransition = scaleOutDuration(
+        duration = durationMiddle,
+    ) + fadeOutDuration(
+        duration = durationMiddle,
+    )
 
     AnimatedVisibility(
         visibleState = visibilityState,
@@ -348,12 +358,29 @@ private fun SelectedStateBlock(
 private fun CommonStateBlock(
     visibilityState: MutableTransitionState<Boolean>,
 ) {
-    val enterTransition = scaleIn() + fadeIn(
+    val enterTransition = scaleInDuration(
+        duration = durationMiddle,
+    ) + fadeInDuration(
+        duration = durationMiddle,
         // Fade in with the initial alpha of 0.3f.
         initialAlpha = 0.3f
     )
 
-    val exitTransition = scaleOut() + fadeOut()
+    val exitTransition = scaleOutDuration(
+        duration = durationMiddle,
+    ) + fadeOutDuration(
+        duration = durationMiddle,
+    )
+
+    AnimatedVisibility(
+        visibleState = visibilityState,
+        enter = enterTransition,
+        exit = exitTransition,
+    ) {
+        IconButton(onClick = { }) {
+            Icon(Icons.Default.Settings, contentDescription = "Settings")
+        }
+    }
 
     AnimatedVisibility(
         visibleState = visibilityState,
@@ -362,7 +389,7 @@ private fun CommonStateBlock(
     ) {
 
         IconButton(onClick = { }) {
-            Icon(Icons.Default.Search, contentDescription = "Add new recipe")
+            Icon(Icons.Default.Search, contentDescription = "Search")
         }
     }
 }
