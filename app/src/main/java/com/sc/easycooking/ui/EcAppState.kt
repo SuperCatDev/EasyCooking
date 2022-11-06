@@ -1,14 +1,17 @@
+@file:OptIn(ExperimentalAnimationApi::class)
+
 package com.sc.easycooking.ui
 
 import android.os.Trace
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.sc.easycooking.navigation.EcNavigationDestination
 
-public inline fun <T> trace(label: String, crossinline block: () -> T): T {
+private inline fun <T> trace(label: String, crossinline block: () -> T): T {
     try {
         Trace.beginSection(label)
         return block()
@@ -19,7 +22,7 @@ public inline fun <T> trace(label: String, crossinline block: () -> T): T {
 
 @Composable
 fun rememberEcAppState(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberAnimatedNavController()
 ): EcAppState {
     return remember(navController) {
         EcAppState(navController)
@@ -32,7 +35,9 @@ class EcAppState(
 ) {
     fun navigate(destination: EcNavigationDestination, route: String? = null) {
         trace("Navigation: $destination") {
-            navController.navigate(route ?: destination.route)
+            navController.navigate(
+                route = route ?: destination.route,
+            )
             // in case of BottomNavigation - TopLevelDestination is a tab
             /*
             if (destination is TopLevelDestination) {
