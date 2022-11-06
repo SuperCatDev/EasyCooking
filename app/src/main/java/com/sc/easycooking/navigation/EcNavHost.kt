@@ -3,6 +3,9 @@
 package com.sc.easycooking.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -29,6 +32,8 @@ fun EcNavHost(
     AnimatedNavHost(
         navController = navController,
         startDestination = RecipesListDestination.route,
+        enterTransition = { fadeIn(animationSpec = tween(300)) },
+        exitTransition = { fadeOut(animationSpec = tween(300)) },
         modifier = modifier,
     ) {
         recipesListGraph {

@@ -20,10 +20,12 @@ fun NavGraphBuilder.settingsGraph(
                 fullWidth
             })
         },
-        exitTransition = {
-            slideOutHorizontally(targetOffsetX = { fullWidth ->
-                fullWidth
-            })
+        exitTransition =  {
+            slideOutHorizontally(
+                targetOffsetX = { fullWidth ->
+                    fullWidth
+                }
+            )
         },
     ) {
         SettingsScreenRoute(onBackClick = onBackClick)
