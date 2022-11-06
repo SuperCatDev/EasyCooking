@@ -5,8 +5,12 @@ import androidx.navigation.compose.composable
 import com.sc.easycooking.recipes.api.navigation.RecipesListDestination
 import com.sc.easycooking.recipes.impl.ui.RecipesListRoute
 
-fun NavGraphBuilder.recipesListGraph() {
+fun NavGraphBuilder.recipesListGraph(
+    navigateToSettings: () -> Unit,
+) {
     composable(route = RecipesListDestination.route) {
-        RecipesListRoute()
+        RecipesListRoute(
+            navigateToSettings = navigateToSettings,
+        )
     }
 }

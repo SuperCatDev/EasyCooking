@@ -26,7 +26,11 @@ fun EcApp(
                 navController = appState.navController,
                 modifier = Modifier
                     .padding(padding)
-                    .consumedWindowInsets(padding)
+                    .consumedWindowInsets(padding),
+                onNavigateToDestination = { destination, route ->
+                    appState.navigate(destination, route)
+                },
+                onBackClick = { appState.onBackClick() },
             )
         }
     }

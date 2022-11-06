@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.sc.easycooking.recipes.api.navigation.RecipesListDestination
 import com.sc.easycooking.recipes.impl.navigation.recipesListGraph
+import com.sc.easycooking.settings.api.navigation.SettingsDestination
+import com.sc.easycooking.settings.impl.navigation.settingsGraph
 
 /**
  * Top-level navigation graph. Navigation is organized as explained at
@@ -17,8 +19,8 @@ import com.sc.easycooking.recipes.impl.navigation.recipesListGraph
 @Composable
 fun EcNavHost(
     navController: NavHostController,
-    //onNavigateToDestination: (EcNavigationDestination, String) -> Unit,
-    //onBackClick: () -> Unit,
+    onNavigateToDestination: (EcNavigationDestination, String?) -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -26,6 +28,9 @@ fun EcNavHost(
         startDestination = RecipesListDestination.route,
         modifier = modifier,
     ) {
-        recipesListGraph()
+        recipesListGraph {
+            onNavigateToDestination(SettingsDestination, null)
+        }
+        settingsGraph(onBackClick)
     }
 }

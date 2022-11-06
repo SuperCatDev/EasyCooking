@@ -86,14 +86,16 @@ import com.sc.easycooking.recipes.impl.ui.paging.items
 internal fun RecipesListRoute(
     modifier: Modifier = Modifier,
     viewModel: RecipesListViewModel = hiltViewModel(),
+    navigateToSettings: () -> Unit,
 ) {
-    RecipesListScreen(modifier, viewModel)
+    RecipesListScreen(modifier, viewModel, navigateToSettings)
 }
 
 @Composable
 internal fun RecipesListScreen(
     modifier: Modifier = Modifier,
     viewModel: RecipesListViewModel,
+    navigateToSettings: () -> Unit,
 ) {
     val systemUiController = rememberSystemUiController()
     systemUiController.setNavigationBarColor(
@@ -110,7 +112,7 @@ internal fun RecipesListScreen(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
                 actions = {
-                    DrawActions(viewModel, selectedItems.value)
+                    DrawActions(viewModel, selectedItems.value, navigateToSettings)
                 },
                 floatingActionButton = {
                     FloatingActionButton(
@@ -234,7 +236,8 @@ private fun LazyStaggeredGridScope.recipeListScreen(
 @Composable
 private fun DrawActions(
     viewModel: RecipesListViewModel,
-    selectedItems: Set<RecipeUiModelShort>
+    selectedItems: Set<RecipeUiModelShort>,
+    navigateToSettings: () -> Unit,
 ) {
     val shouldShowSelected = selectedItems.isNotEmpty()
     val shouldShowCommon = !shouldShowSelected
@@ -260,12 +263,12 @@ private fun DrawActions(
             SelectedStateBlock(selectedBlockVisibilityState, selectedItemsCount, viewModel)
         }
         !commonBlockVisibilityState.isIdle -> {
-            CommonStateBlock(commonBlockVisibilityState)
+            CommonStateBlock(commonBlockVisibilityState, navigateToSettings)
         }
         commonBlockVisibilityState.currentState && !shouldShowCommon -> {
             commonBlockVisibilityState.targetState = false
 
-            CommonStateBlock(commonBlockVisibilityState)
+            CommonStateBlock(commonBlockVisibilityState, navigateToSettings)
         }
         selectedBlockVisibilityState.currentState && !shouldShowSelected -> {
             selectedBlockVisibilityState.targetState = false
@@ -276,7 +279,7 @@ private fun DrawActions(
         shouldShowCommon -> {
             commonBlockVisibilityState.targetState = true
 
-            CommonStateBlock(commonBlockVisibilityState)
+            CommonStateBlock(commonBlockVisibilityState, navigateToSettings)
         }
 
         //shouldShowSelected
@@ -357,6 +360,7 @@ private fun SelectedStateBlock(
 @Composable
 private fun CommonStateBlock(
     visibilityState: MutableTransitionState<Boolean>,
+    navigateToSettings: () -> Unit,
 ) {
     val enterTransition = scaleInDuration(
         duration = durationMiddle,
@@ -377,7 +381,7 @@ private fun CommonStateBlock(
         enter = enterTransition,
         exit = exitTransition,
     ) {
-        IconButton(onClick = { }) {
+        IconButton(onClick = { navigateToSettings.invoke() }) {
             Icon(Icons.Default.Settings, contentDescription = "Settings")
         }
     }
