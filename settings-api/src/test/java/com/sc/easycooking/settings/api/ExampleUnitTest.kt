@@ -1,4 +1,4 @@
-package com.example.view_ext
+package com.sc.easycooking.settings.api
 
 import org.junit.Test
 
