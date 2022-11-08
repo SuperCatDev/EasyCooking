@@ -101,63 +101,6 @@ internal fun RecipesListScreen(
 ) {
     val selectedItems = viewModel.observeSelectedItems().collectAsState()
 
-    Box(modifier = Modifier) {
-        Scaffold(
-            modifier = modifier
-                .padding(WindowInsets.navigationBars.asPaddingValues()),
-            bottomBar = {
-                BottomAppBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
-                    actions = {
-                        DrawActions(viewModel, selectedItems.value, navigateToSettings)
-                    },
-                    floatingActionButton = {
-                        FloatingActionButton(
-                            onClick = { viewModel.addClicked() },
-                            elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-                        ) {
-                            Icon(Icons.Filled.Add, contentDescription = "Add new recipe")
-                        }
-                    },
-                )
-            },
-        ) { innerPadding ->
-
-            val lazyPagingItems = viewModel.observeAllRecipes().collectAsLazyPagingItems()
-
-            val configuration = LocalConfiguration.current
-
-            LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2),
-                contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = modifier
-                    .padding(innerPadding)
-                    .consumedWindowInsets(innerPadding)
-                    .fillMaxSize()
-                    .testTag("recipeList:feed"),
-            ) {
-                recipeListScreen(lazyPagingItems, selectedItems.value, viewModel)
-            }
-        }
-
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(
-                    WindowInsets.navigationBars
-                        .asPaddingValues()
-                        .calculateBottomPadding()
-                )
-                .background(MaterialTheme.colorScheme.primary)
-                .align(Alignment.BottomStart)
-        )
-    }
-
-/*
     WrapWithColoredSystemBars(
         modifier = modifier,
         navBarColor = MaterialTheme.colorScheme.surfaceColorAtElevation(BottomAppBarDefaults.ContainerElevation)
@@ -202,7 +145,7 @@ internal fun RecipesListScreen(
                 recipeListScreen(lazyPagingItems, selectedItems.value, viewModel)
             }
         }
-    }*/
+    }
 }
 
 private fun LazyStaggeredGridScope.recipeListScreen(

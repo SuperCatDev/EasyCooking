@@ -20,7 +20,7 @@ inline fun WrapWithColoredSystemBars(
     navBarColor: Color?,
     content: @Composable (Modifier) -> Unit = {}
 ) {
-    Box {
+    Box(modifier = modifier) {
         content(Modifier.padding(WindowInsets.navigationBars.asPaddingValues()))
 
         Box(
@@ -31,10 +31,10 @@ inline fun WrapWithColoredSystemBars(
                         .asPaddingValues()
                         .calculateBottomPadding()
                 )
-                .also {
+                .let {
                     navBarColor?.let { color ->
                         it.background(color)
-                    }
+                    } ?: it
                 }
                 .align(Alignment.BottomStart)
         )
