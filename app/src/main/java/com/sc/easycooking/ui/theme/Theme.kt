@@ -54,15 +54,12 @@ fun EasyCookingTheme(
     val systemUiController = rememberSystemUiController()
 
     DisposableEffect(systemUiController, darkTheme) {
-        // Update all of the system bar colors to be transparent, and use
-        // dark icons if we're in light theme
         systemUiController.setSystemBarsColor(
             color = Color.Transparent,
-            darkIcons = !darkTheme
+            darkIcons = !darkTheme,
+            isNavigationBarContrastEnforced = false,
+            transformColorForLightContent = { it }
         )
-
-        // setStatusBarColor() and setNavigationBarColor() also exist
-
         onDispose {}
     }
 
