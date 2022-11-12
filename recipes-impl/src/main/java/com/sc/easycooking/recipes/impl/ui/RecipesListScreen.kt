@@ -21,13 +21,10 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumedWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -120,7 +117,10 @@ internal fun RecipesListScreen(
                             onClick = { viewModel.addClicked() },
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
                         ) {
-                            Icon(Icons.Filled.Add, contentDescription = "Add new recipe")
+                            Icon(
+                                Icons.Filled.Add,
+                                contentDescription = stringResource(id = R.string.add_new_recipe)
+                            )
                         }
                     },
                 )
@@ -137,7 +137,14 @@ internal fun RecipesListScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = modifier
-                    .padding(innerPadding)
+                    .padding(
+                        PaddingValues(
+                            start = 0.dp,
+                            end = 0.dp,
+                            top = innerPadding.calculateTopPadding(),
+                            bottom = innerPadding.calculateBottomPadding()
+                        )
+                    )
                     .consumedWindowInsets(innerPadding)
                     .fillMaxSize()
                     .testTag("recipeList:feed"),
@@ -328,7 +335,10 @@ private fun SelectedStateBlock(
             modifier = Modifier
                 .padding(start = 12.dp)
         ) {
-            Icon(Icons.Default.Clear, contentDescription = "Clear selection")
+            Icon(
+                Icons.Default.Clear,
+                contentDescription = stringResource(id = R.string.clear_selection)
+            )
             Text(
                 fontSize = MaterialTheme.typography.labelLarge.fontSize,
                 text = selectedItemsState.value.toString(),
@@ -343,7 +353,7 @@ private fun SelectedStateBlock(
         exit = exitTransition,
     ) {
         IconButton(onClick = { viewModel.deleteSelected() }) {
-            Icon(Icons.Default.Delete, contentDescription = "Delete")
+            Icon(Icons.Default.Delete, contentDescription = stringResource(id = R.string.delete))
         }
     }
 
@@ -353,7 +363,10 @@ private fun SelectedStateBlock(
         exit = exitTransition,
     ) {
         IconButton(onClick = { }) {
-            Icon(Icons.Default.Favorite, contentDescription = "Add new recipe")
+            Icon(
+                Icons.Default.Favorite,
+                contentDescription = stringResource(id = R.string.add_favorite)
+            )
         }
     }
 }
@@ -383,7 +396,10 @@ private fun CommonStateBlock(
         exit = exitTransition,
     ) {
         IconButton(onClick = { navigateToSettings.invoke() }) {
-            Icon(Icons.Default.Settings, contentDescription = "Settings")
+            Icon(
+                Icons.Default.Settings,
+                contentDescription = stringResource(id = R.string.settings)
+            )
         }
     }
 
@@ -394,7 +410,7 @@ private fun CommonStateBlock(
     ) {
 
         IconButton(onClick = { }) {
-            Icon(Icons.Default.Search, contentDescription = "Search")
+            Icon(Icons.Default.Search, contentDescription = stringResource(id = R.string.search))
         }
     }
 }

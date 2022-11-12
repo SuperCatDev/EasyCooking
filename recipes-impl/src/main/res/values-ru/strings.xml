@@ -28,4 +28,11 @@
     <string name="category_main">Основное</string>
     <string name="category_desert">Десерт</string>
     <string name="category_cheese">Сыр</string>
+
+    <string name="clear_selection">Очистить выделение</string>
+    <string name="add_new_recipe">Добавить новый рецепт</string>
+    <string name="delete">Удалить</string>
+    <string name="add_favorite">Добавить в избранные</string>
+    <string name="settings">Настройки</string>
+    <string name="search">Поиск</string>
 </resources>

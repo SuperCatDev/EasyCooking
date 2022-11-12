@@ -29,4 +29,11 @@
     <string name="category_main">Main</string>
     <string name="category_desert">Desert</string>
     <string name="category_cheese">Cheese</string>
+
+    <string name="clear_selection">Clear selection</string>
+    <string name="add_new_recipe">Add new recipe</string>
+    <string name="delete">Delete</string>
+    <string name="add_favorite">Add to Favorites</string>
+    <string name="settings">Settings</string>
+    <string name="search">Search</string>
 </resources>
