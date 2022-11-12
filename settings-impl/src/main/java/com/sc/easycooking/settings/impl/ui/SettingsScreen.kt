@@ -2,6 +2,7 @@
 
 package com.sc.easycooking.settings.impl.ui
 
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,33 +30,40 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sc.easycooking.settings.impl.R
+import com.sc.easycooking.settings.impl.presentation.SettingsListViewModel
 import com.sc.easycooking.view_ext.insets.WrapWithColoredSystemBars
 import com.sc.easycooking.view_ext.views.SwitchLight
 
 @Composable
 internal fun SettingsScreenRoute(
     modifier: Modifier = Modifier,
+    viewModel: SettingsListViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
 ) {
-    SettingsScreen(modifier, onBackClick)
+    SettingsScreen(modifier, viewModel, onBackClick)
 }
 
 @Suppress("SameParameterValue")
 @Composable
 internal fun SettingsScreen(
     modifier: Modifier = Modifier,
+    viewModel: SettingsListViewModel,
     onBackClick: () -> Unit,
 ) {
     WrapWithColoredSystemBars(
         modifier = modifier,
         navBarColor = MaterialTheme.colorScheme.background,
     ) { innerModifier ->
+
+        val materialYouState = viewModel.observeMaterialYou().collectAsState()
 
         Scaffold(
             modifier = innerModifier
@@ -122,32 +130,34 @@ internal fun SettingsScreen(
                                 )
                             }
 
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp)
-                            ) {
-                                Text(
-                                    modifier = Modifier.align(Alignment.CenterStart),
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    text = stringResource(id = R.string.setting_material_you)
-                                )
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp)
+                                ) {
+                                    Text(
+                                        modifier = Modifier.align(Alignment.CenterStart),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        text = stringResource(id = R.string.setting_material_you)
+                                    )
 
-                                SwitchLight(
-                                    modifier = Modifier.align(Alignment.CenterEnd),
-                                    checked = false,
-                                ) { _ ->
+                                    SwitchLight(
+                                        modifier = Modifier.align(Alignment.CenterEnd),
+                                        checked = materialYouState.value,
+                                    ) { checked ->
+                                        viewModel.changeMaterialYou(checked)
+                                    }
 
                                 }
 
+                                Text(
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                    text = stringResource(id = R.string.setting_material_you_description),
+                                    style = MaterialTheme.typography.bodySmall,
+                                )
                             }
-
-                            Text(
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                                text = stringResource(id = R.string.setting_material_you_description),
-                                style = MaterialTheme.typography.bodySmall,
-                            )
                         }
                     }
                 }

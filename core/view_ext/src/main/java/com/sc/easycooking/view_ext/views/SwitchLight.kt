@@ -53,8 +53,11 @@ fun SwitchLight(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onTap = {
+                        val newValue = !switchON.value
                         // This is called when the user taps on the canvas
-                        switchON.value = !switchON.value
+                        switchON.value = newValue
+
+                        checkChanged(newValue)
                     }
                 )
             }
