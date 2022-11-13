@@ -3,6 +3,7 @@ package com.sc.easycooking.settings.impl.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sc.easycooking.settings.api.domain.SettingsInteractor
+import com.sc.easycooking.settings.api.models.ThemeSetting
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,10 +20,23 @@ internal class SettingsListViewModel @Inject constructor(
             .stateIn(viewModelScope, started = SharingStarted.Eagerly, true)
     }
 
+    fun observeSelectedTheme(): StateFlow<ThemeSetting> {
+        return interactor.getDisplaySettingsFlow().map { it.themeSetting }
+            .stateIn(viewModelScope, started = SharingStarted.Eagerly, ThemeSetting.DEFAULT)
+    }
+
     fun changeMaterialYou(enabled: Boolean) {
         interactor.updateDisplaySetting(
             interactor.getDisplaySettingsFlow().value.copy(
                 materialYouEnabled = enabled
+            )
+        )
+    }
+
+    fun changeTheme(theme: ThemeSetting) {
+        interactor.updateDisplaySetting(
+            interactor.getDisplaySettingsFlow().value.copy(
+                themeSetting = theme
             )
         )
     }

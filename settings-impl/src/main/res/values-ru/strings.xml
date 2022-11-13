@@ -8,6 +8,8 @@
     <string name="setting_theme_dark">Темная</string>
     <string name="setting_theme_light">Светлая</string>
 
+    <string name="setting_theme_dialog_title">Выбрать тему</string>
+
     <string name="setting_material_you">Системная палитра цветов</string>
     <string name="setting_material_you_description">Настройка определяет будет ли использована системная палитра или палитра приложения</string>
 </resources>

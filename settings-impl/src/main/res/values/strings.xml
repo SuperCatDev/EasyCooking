@@ -8,6 +8,8 @@
     <string name="setting_theme_dark">Dark</string>
     <string name="setting_theme_light">Light</string>
 
+    <string name="setting_theme_dialog_title">Select theme</string>
+
     <string name="setting_material_you">System Color palette</string>
     <string name="setting_material_you_description">The setting determines whether the system or the application palette will be used</string>
 </resources>
