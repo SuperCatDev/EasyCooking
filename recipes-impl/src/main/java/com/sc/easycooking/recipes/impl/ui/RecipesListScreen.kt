@@ -108,7 +108,7 @@ internal fun RecipesListScreen(
                 BottomAppBar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp)),
+                        .clip(RoundedCornerShape(16.dp, 16.dp, 0.dp, 0.dp)),
                     actions = {
                         DrawActions(viewModel, selectedItems.value, navigateToSettings)
                     },

@@ -33,8 +33,6 @@ import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -90,7 +88,30 @@ internal fun SettingsScreen(
                 .fillMaxSize()
                 .padding(WindowInsets.statusBars.asPaddingValues()),
             topBar = {
+
+                // I don't use TopAppBar here because it blinks in a strange way when change a theme
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)) {
+                    IconButton(modifier = Modifier.padding(start = 4.dp), onClick = onBackClick) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = stringResource(id = com.sc.easycooking.view_ext.R.string.back),
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.padding(start = 4.dp))
+
+                    Text(
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        text = stringResource(id = R.string.settings_title),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+                // Uncomment in case TopAppBar blinks are fixed when theme changed
+/*
                 TopAppBar(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
                     title = {
                         Text(
                             modifier = Modifier,
@@ -106,7 +127,7 @@ internal fun SettingsScreen(
                         }
                     },
                     scrollBehavior = pinnedScrollBehavior()
-                )
+                )*/
             },
             content = { paddingValues ->
                 Box(
@@ -205,7 +226,11 @@ private inline fun SettingsBlock(
 }
 
 @Composable
-private fun ThemeDialog(selectedTheme: ThemeSetting, viewModel: SettingsListViewModel, setShowDialog: (Boolean) -> Unit) {
+private fun ThemeDialog(
+    selectedTheme: ThemeSetting,
+    viewModel: SettingsListViewModel,
+    setShowDialog: (Boolean) -> Unit
+) {
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Surface(
             shape = RoundedCornerShape(16.dp),
@@ -291,7 +316,7 @@ private fun DialogRadioButtonRow(
 
 @Composable
 private fun ThemeSetting.getStringValue(): String {
-    return when(this) {
+    return when (this) {
         ThemeSetting.DEFAULT -> stringResource(id = R.string.setting_theme_default)
         ThemeSetting.LIGHT -> stringResource(id = R.string.setting_theme_light)
         ThemeSetting.DARK -> stringResource(id = R.string.setting_theme_dark)
