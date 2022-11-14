@@ -90,9 +90,11 @@ internal fun SettingsScreen(
             topBar = {
 
                 // I don't use TopAppBar here because it blinks in a strange way when change a theme
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
                     IconButton(modifier = Modifier.padding(start = 4.dp), onClick = onBackClick) {
                         Icon(
                             Icons.Default.ArrowBack,
@@ -178,7 +180,10 @@ internal fun SettingsScreen(
                                         .padding(horizontal = 16.dp)
                                 ) {
                                     Text(
-                                        modifier = Modifier.align(Alignment.CenterStart),
+                                        modifier = Modifier
+                                            .align(Alignment.CenterStart)
+                                            // space for switch at the end
+                                            .padding(end = 36.dp),
                                         style = MaterialTheme.typography.bodyLarge,
                                         color = MaterialTheme.colorScheme.onBackground,
                                         text = stringResource(id = R.string.setting_material_you)
