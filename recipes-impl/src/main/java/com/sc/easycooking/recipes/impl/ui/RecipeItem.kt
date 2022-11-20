@@ -25,6 +25,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sc.easycooking.recipes.impl.R
 import com.sc.easycooking.recipes.impl.presentation.RecipesListViewModel
@@ -41,14 +42,14 @@ internal fun RecipeItem(
     val hapticFeedback = LocalHapticFeedback.current
     val roundSize = 12.dp
 
-    Box(
+    Column(
         modifier = Modifier
             .shadow(
                 elevation = if (selected) 5.dp else 0.dp,
                 shape = RoundedCornerShape(roundSize),
             )
             .background(
-                color = MaterialTheme.colorScheme.background,
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(roundSize),
             )
             .border(
@@ -73,48 +74,68 @@ internal fun RecipeItem(
                     }
                 }
             ),
-        contentAlignment = Alignment.TopStart,
+        horizontalAlignment = Alignment.Start,
     ) {
-        Column(
+
+        if (item != null) {
+            Text(
+                text = stringResource(id = item.categoryNameId),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        Box(
             modifier = Modifier
-                .padding(16.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.background,
+                    shape = RoundedCornerShape(roundSize),
+                )
+                .clip(RoundedCornerShape(roundSize))
         ) {
-            if (item != null) {
-                Text(
-                    text = item.name,
-                    modifier = Modifier.align(Alignment.Start),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                item.ingredients.forEachIndexed { index, ingredient ->
-                    Spacer(modifier = Modifier.height(if (index == 0) 16.dp else 2.dp))
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                if (item != null) {
+                    Text(
+                        text = item.name,
+                        modifier = Modifier.align(Alignment.Start),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    item.ingredients.forEachIndexed { index, ingredient ->
+                        Spacer(modifier = Modifier.height(if (index == 0) 16.dp else 2.dp))
 
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = ingredient.name,
-                            modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typography.bodySmall,
-                        )
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = ingredient.name,
+                                modifier = Modifier.weight(1f),
+                                style = MaterialTheme.typography.bodySmall,
+                            )
 
-                        Text(
-                            text = "${ingredient.amount} ${ingredient.quantity}",
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.End,
-                            style = MaterialTheme.typography.bodySmall,
-                        )
+                            Text(
+                                text = "${ingredient.amount} ${ingredient.quantity}",
+                                modifier = Modifier.weight(1f),
+                                textAlign = TextAlign.End,
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
+
                     }
-
+                } else {
+                    Text(
+                        text = stringResource(id = R.string.recipe_item_loading),
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
-            } else {
-                Text(
-                    text = stringResource(id = R.string.recipe_item_loading),
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
 
-            if (item?.tags?.isNotEmpty() == true) {
-                Spacer(modifier = Modifier.padding(top = 8.dp))
-                HashTagRow(tags = item.tags.map { it.nameId })
+                if (item?.tags?.isNotEmpty() == true) {
+                    Spacer(modifier = Modifier.padding(top = 8.dp))
+                    HashTagRow(tags = item.tags.map { it.nameId })
+                }
             }
         }
     }

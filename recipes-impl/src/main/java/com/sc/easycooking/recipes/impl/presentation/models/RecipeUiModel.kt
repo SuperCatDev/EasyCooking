@@ -1,6 +1,7 @@
 package com.sc.easycooking.recipes.impl.presentation.models
 
 import android.os.Parcelable
+import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -19,7 +20,8 @@ internal data class RecipeUiModel(
 internal data class RecipeUiModelShort(
     val id: Int,
     val name: String,
-    val category: String,
+    @StringRes
+    val categoryNameId: Int,
     val tags: List<RecipeUiTag>,
     val ingredients: List<IngredientUiModel>,
 ): Parcelable

@@ -2,6 +2,7 @@ package com.sc.easycooking.recipes.impl.presentation.mappers
 
 import android.content.Context
 import com.sc.easycooking.recipes.api.models.QuantityType
+import com.sc.easycooking.recipes.api.models.RecipeCategory
 import com.sc.easycooking.recipes.api.models.RecipeModel
 import com.sc.easycooking.recipes.api.models.RecipeTag
 import com.sc.easycooking.recipes.impl.R
@@ -13,7 +14,15 @@ internal fun RecipeModel.toUiModelShort(context: Context): RecipeUiModelShort {
     return RecipeUiModelShort(
         id = id,
         name = name,
-        category = category.name,
+        categoryNameId = when (category) {
+            RecipeCategory.COLD_APPETIZER -> R.string.category_cold_appetizer
+            RecipeCategory.HOT_APPETIZER -> R.string.category_hot_appetizer
+            RecipeCategory.SOUP -> R.string.category_soup
+            RecipeCategory.SALAD -> R.string.category_salad
+            RecipeCategory.MAIN -> R.string.category_main
+            RecipeCategory.DESERT -> R.string.category_desert
+            RecipeCategory.CHEESE -> R.string.category_cheese
+        },
         tags = tags.map {
             RecipeUiTag(
                 tag = it,
