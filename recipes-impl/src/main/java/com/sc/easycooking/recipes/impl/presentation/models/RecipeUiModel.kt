@@ -20,5 +20,6 @@ internal data class RecipeUiModelShort(
     val id: Int,
     val name: String,
     val category: String,
+    val tags: List<RecipeUiTag>,
     val ingredients: List<IngredientUiModel>,
 ): Parcelable

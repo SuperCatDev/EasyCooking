@@ -166,6 +166,35 @@ internal class RecipesRepository @Inject constructor(private val recipesDao: Rec
             )
         )
 
+        val entity5 = RecipeModel(
+            id = 5,
+            name = "Tomatos with something",
+            recipe = "Нарежьте крабовые палочки, перец и помидоры небольшими полосками. Добавьте к ним тёртый сыр и измельчённый чеснок. Заправьте салат майонезом и украсьте укропом.",
+            creationDate = System.currentTimeMillis(),
+            cookingTime = 5,
+            category = RecipeCategory.SALAD,
+            tags = listOf(
+                RecipeTag.MEAT,
+                RecipeTag.FISH,
+                RecipeTag.SEAFOOD,
+                RecipeTag.VEGETARIAN,
+                RecipeTag.VEGETABLES,
+                RecipeTag.FRUITS,
+                RecipeTag.BAKERY,
+            ),
+            ingredients = listOf(
+                IngredientModel(
+                    name = "Tomatos",
+                    quantity = QuantityType.AMOUNT,
+                    amount = 4,
+                ),
+                IngredientModel(
+                    name = "Onion",
+                    quantity = QuantityType.AMOUNT,
+                    amount = 1,
+                )
+            )
+        )
 
 
         return flowOf(
@@ -183,6 +212,7 @@ internal class RecipesRepository @Inject constructor(private val recipesDao: Rec
                     entity3.copy(id = 10),
                     entity1.copy(id = 11),
                     entity4.copy(id = 12),
+                    entity5.copy(id = 13),
                 )
             )
         )

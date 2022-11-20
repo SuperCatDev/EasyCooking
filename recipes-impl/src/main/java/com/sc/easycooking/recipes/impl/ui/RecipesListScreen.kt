@@ -78,6 +78,8 @@ import com.example.view_ext.anims.scaleOutDuration
 import com.sc.easycooking.recipes.impl.R
 import com.sc.easycooking.recipes.impl.presentation.RecipesListViewModel
 import com.sc.easycooking.recipes.impl.presentation.models.RecipeUiModelShort
+import com.sc.easycooking.recipes.impl.presentation.models.RecipeUiTag
+import com.sc.easycooking.recipes.impl.ui.hashtag.HashTagRow
 import com.sc.easycooking.recipes.impl.ui.paging.items
 import com.sc.easycooking.view_ext.insets.WrapWithColoredSystemBars
 
@@ -235,6 +237,11 @@ private fun LazyStaggeredGridScope.recipeListScreen(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         style = MaterialTheme.typography.bodySmall
                     )
+                }
+
+                if (item?.tags?.isNotEmpty() == true) {
+                    Spacer(modifier = Modifier.padding(top = 8.dp))
+                    HashTagRow(tags = item.tags.map { it.nameId })
                 }
             }
         }
