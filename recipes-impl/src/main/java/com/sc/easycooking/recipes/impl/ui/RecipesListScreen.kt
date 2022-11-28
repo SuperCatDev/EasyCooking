@@ -73,8 +73,9 @@ internal fun RecipesListRoute(
     modifier: Modifier = Modifier,
     viewModel: RecipesListViewModel = hiltViewModel(),
     navigateToSettings: () -> Unit,
+    navigateToDetails: (id: Int?, edit: Boolean) -> Unit,
 ) {
-    RecipesListScreen(modifier, viewModel, navigateToSettings)
+    RecipesListScreen(modifier, viewModel, navigateToSettings, navigateToDetails)
 }
 
 @Composable
@@ -82,6 +83,7 @@ internal fun RecipesListScreen(
     modifier: Modifier = Modifier,
     viewModel: RecipesListViewModel,
     navigateToSettings: () -> Unit,
+    navigateToDetails: (id: Int?, edit: Boolean) -> Unit,
 ) {
     val selectedItems = viewModel.observeSelectedItems().collectAsState()
 
@@ -136,20 +138,21 @@ internal fun RecipesListScreen(
                     .fillMaxSize()
                     .testTag("recipeList:feed"),
             ) {
-                recipeListScreen(lazyPagingItems, selectedItems.value, viewModel)
+                recipeListScreen(navigateToDetails, lazyPagingItems, selectedItems.value, viewModel)
             }
         }
     }
 }
 
 private fun LazyStaggeredGridScope.recipeListScreen(
+    navigateToDetails: (id: Int?, edit: Boolean) -> Unit,
     lazyItems: LazyPagingItems<RecipeUiModelShort>,
     selectedItems: Set<RecipeUiModelShort>,
     viewModel: RecipesListViewModel
 ) {
 
     items(lazyItems, key = { it.id }) { item: RecipeUiModelShort? ->
-        RecipeItem(item, selectedItems, viewModel)
+        RecipeItem(item, selectedItems, viewModel, navigateToDetails)
     }
 }
 

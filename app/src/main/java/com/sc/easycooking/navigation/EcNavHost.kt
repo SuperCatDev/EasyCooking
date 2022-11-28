@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.sc.easycooking.recipes.api.navigation.RecipeDetailsDestination
 import com.sc.easycooking.recipes.api.navigation.RecipesListDestination
 import com.sc.easycooking.recipes.impl.navigation.recipesListGraph
 import com.sc.easycooking.settings.api.navigation.SettingsDestination
@@ -36,9 +37,15 @@ fun EcNavHost(
         exitTransition = { fadeOut(animationSpec = tween(300)) },
         modifier = modifier,
     ) {
-        recipesListGraph {
-            onNavigateToDestination(SettingsDestination, null)
-        }
+        recipesListGraph(
+            navigateToSettings = {
+                onNavigateToDestination(SettingsDestination, null)
+            },
+            navigateToDetails = { id: Int?, edit: Boolean ->
+                onNavigateToDestination(RecipeDetailsDestination(id, edit), null)
+            },
+            onBackClick = onBackClick,
+        )
         settingsGraph(onBackClick)
     }
 }
