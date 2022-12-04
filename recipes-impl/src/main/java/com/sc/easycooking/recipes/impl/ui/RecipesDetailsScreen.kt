@@ -20,13 +20,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.sc.easycooking.recipes.impl.presentation.RecipesDetailsViewModel
 import com.sc.easycooking.view_ext.insets.WrapWithColoredSystemBars
 
 @Composable
 internal fun RecipeDetailsRoute(
     modifier: Modifier = Modifier,
-    id: Int?,
-    edit: Boolean,
+    viewModel: RecipesDetailsViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
 ) {
     RecipeDetailsScreen(modifier, onBackClick)

@@ -3,6 +3,10 @@
 package com.sc.easycooking.recipes.impl.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -26,20 +30,21 @@ fun NavGraphBuilder.recipesListGraph(
     composable(
         route = RecipeDetailsDestination.NAV_COMMAND,
         arguments = listOf(
-            navArgument("id") {
-                type = NavType.IntType
+            navArgument(RecipeDetailsDestination.ID_ARG) {
+                nullable = true
             },
-            navArgument("edit") {
+            navArgument(RecipeDetailsDestination.EDIT_ARG) {
                 type = NavType.BoolType
             },
-        )
-    ) { backStackEntry ->
-        val id = backStackEntry.arguments?.getInt(RecipeDetailsDestination.ID_ARG)
-        val edit = backStackEntry.arguments?.getBoolean(RecipeDetailsDestination.EDIT_ARG) ?: false
-
+        ),
+        enterTransition = {
+            fadeIn() + scaleIn(tween(300), initialScale = 0.75f)
+        },
+        exitTransition = {
+            scaleOut(tween(300), targetScale = 0.75f)
+        },
+    ) {
         RecipeDetailsRoute(
-            id = id,
-            edit = edit,
             onBackClick = onBackClick,
         )
     }

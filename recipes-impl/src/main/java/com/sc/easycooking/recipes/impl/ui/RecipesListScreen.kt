@@ -103,7 +103,7 @@ internal fun RecipesListScreen(
                     },
                     floatingActionButton = {
                         FloatingActionButton(
-                            onClick = { viewModel.addClicked() },
+                            onClick = { navigateToDetails(null, true) },
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
                         ) {
                             Icon(

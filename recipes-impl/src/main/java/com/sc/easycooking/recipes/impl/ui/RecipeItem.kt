@@ -62,10 +62,10 @@ internal fun RecipeItem(
             .combinedClickable(
                 enabled = item != null,
                 onClick = {
-                    navigateToDetails(
-                        item?.id,
-                        false,
-                    )
+                    item?.let { selectedItem ->
+                        viewModel.clickedAt(selectedItem)
+                        navigateToDetails(selectedItem.id, false)
+                    }
                 },
                 onLongClick = {
                     hapticFeedback.performHapticFeedback(
