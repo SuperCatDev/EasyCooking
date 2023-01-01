@@ -11,13 +11,19 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumedWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -50,6 +56,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -91,8 +98,10 @@ internal fun RecipesListScreen(
         modifier = modifier,
         navBarColor = MaterialTheme.colorScheme.surfaceColorAtElevation(BottomAppBarDefaults.ContainerElevation)
     ) { innerModifier ->
+
         Scaffold(
             modifier = innerModifier,
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             bottomBar = {
                 BottomAppBar(
                     modifier = Modifier
@@ -120,8 +129,10 @@ internal fun RecipesListScreen(
 
             val configuration = LocalConfiguration.current
 
+            val columns =
+                if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
             LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2),
+                columns = StaggeredGridCells.Fixed(columns),
                 contentPadding = PaddingValues(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -138,8 +149,25 @@ internal fun RecipesListScreen(
                     .fillMaxSize()
                     .testTag("recipeList:feed"),
             ) {
-                recipeListScreen(navigateToDetails, lazyPagingItems, selectedItems.value, viewModel)
+                recipeListScreen(
+                    navigateToDetails,
+                    lazyPagingItems,
+                    selectedItems.value,
+                    columns,
+                    viewModel
+                )
             }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(
+                        WindowInsets.statusBars
+                            .asPaddingValues()
+                            .calculateTopPadding()
+                    )
+                    .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.8f))
+            )
         }
     }
 }
@@ -148,11 +176,22 @@ private fun LazyStaggeredGridScope.recipeListScreen(
     navigateToDetails: (id: Int?, edit: Boolean) -> Unit,
     lazyItems: LazyPagingItems<RecipeUiModelShort>,
     selectedItems: Set<RecipeUiModelShort>,
+    columns: Int,
     viewModel: RecipesListViewModel
 ) {
 
-    items(lazyItems, key = { it.id }) { item: RecipeUiModelShort? ->
-        RecipeItem(item, selectedItems, viewModel, navigateToDetails)
+    items(lazyItems, key = { it.id }) { item: RecipeUiModelShort?, index: Int ->
+        if (index in 0 until columns) {
+            Box(
+                modifier = Modifier.padding(
+                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                )
+            ) {
+                RecipeItem(item, selectedItems, viewModel, navigateToDetails)
+            }
+        } else {
+            RecipeItem(item, selectedItems, viewModel, navigateToDetails)
+        }
     }
 }
 
