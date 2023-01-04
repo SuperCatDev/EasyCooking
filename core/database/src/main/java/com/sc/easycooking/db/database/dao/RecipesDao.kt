@@ -28,9 +28,12 @@ interface RecipesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addRecipe(recipe: RecipeEntity)
 
-    @Query("SELECT * FROM recipes")
+    @Query("SELECT * FROM recipes ORDER BY creation_date")
     fun observeAllRecipes(): DataSource.Factory<Int, RecipeEntity>
 
     @Query("DELETE FROM recipes WHERE id in (:ids)")
     suspend fun deleteByIds(ids: Set<Int>)
+
+    @Query("SELECT * FROM recipes WHERE id == :id")
+    suspend fun getRecipeForId(id: Int): RecipeEntity?
 }

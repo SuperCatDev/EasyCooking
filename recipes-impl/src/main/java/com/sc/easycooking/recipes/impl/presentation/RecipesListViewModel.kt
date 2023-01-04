@@ -2,11 +2,13 @@ package com.sc.easycooking.recipes.impl.presentation
 
 import android.app.Application
 import android.os.Parcelable
+import android.util.Log
 import android.util.LruCache
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import androidx.paging.map
 import com.sc.easycooking.recipes.api.domain.RecipesInteractor
 import com.sc.easycooking.recipes.api.models.RecipeModel
@@ -32,7 +34,11 @@ internal class RecipesListViewModel @Inject constructor(
     application: Application,
 ) : AndroidViewModel(application) {
 
-    private val lruCache = LruCache<Int, RecipeModel>(50)
+    init {
+        Log.e("VVV", "create RecipesListViewModel: ${hashCode()}")
+    }
+
+    private val lruCache = LruCache<Int, RecipeModel>(100)
 
     private val selectedItems: StateFlow<SelectedItemsContainer> =
         savedStateHandle.getStateFlow(
@@ -41,16 +47,24 @@ internal class RecipesListViewModel @Inject constructor(
         )
 
     fun observeSelectedItems(): StateFlow<Set<RecipeUiModelShort>> = selectedItems.map { it.set }
-        .stateIn(viewModelScope, started = SharingStarted.Eagerly, emptySet())
+        .stateIn(viewModelScope, started = SharingStarted.WhileSubscribed(5000), emptySet())
+
+    private val recipesItems = interactor.observeAllRecipes()
+        .map { pagingData ->
+            pagingData.map { model ->
+                lruCache.put(model.id, model)
+                model.toUiModelShort(getApplication())
+            }
+        }
+        .cachedIn(viewModelScope)
+        .stateIn(
+            viewModelScope,
+            started = SharingStarted.Eagerly,
+            PagingData.empty(),
+        )
 
     fun observeAllRecipes(): Flow<PagingData<RecipeUiModelShort>> {
-        return interactor.observeAllRecipes()
-            .map { pagingData ->
-                pagingData.map { model ->
-                    lruCache.put(model.id, model)
-                    model.toUiModelShort(getApplication())
-                }
-            }
+        return recipesItems
     }
 
     fun clearSelection() {

@@ -6,5 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface RecipesInteractor {
     fun observeAllRecipes(): Flow<PagingData<RecipeModel>>
+    suspend fun getRecipeForId(id: Int): RecipeModel?
     suspend fun deleteRecipesByIds(ids: Set<Int>)
 }

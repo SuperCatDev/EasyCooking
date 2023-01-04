@@ -1,58 +1,77 @@
 package com.sc.easycooking.recipes.impl.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.sc.easycooking.db.database.dao.RecipesDao
+import com.sc.easycooking.db.database.model.IngredientDbModel
+import com.sc.easycooking.db.database.model.RecipeEntity
 import com.sc.easycooking.recipes.api.models.IngredientModel
 import com.sc.easycooking.recipes.api.models.QuantityType
 import com.sc.easycooking.recipes.api.models.RecipeCategory
 import com.sc.easycooking.recipes.api.models.RecipeModel
 import com.sc.easycooking.recipes.api.models.RecipeTag
+import com.sc.easycooking.recipes.impl.repository.mappers.toDomainModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 internal class RecipesRepository @Inject constructor(private val recipesDao: RecipesDao) {
-    /*init {
+    init {
         GlobalScope.launch {
+            return@launch
             delay(5000L)
-            recipesDao.addRecipe(
-                RecipeEntity(
-                    name = "Test recipe :)",
-                    recipe = "heje",
-                    creationDate = System.currentTimeMillis(),
-                    cookingTime = 5,
-                    categoryId = 1,
-                    tagIds = emptyList(),
-                    ingredients = listOf(
-                        IngredientDbModel(
-                            name = "Tomatos",
-                            quantityType = 3,
-                            amount = 4,
-                        ),
-                        IngredientDbModel(
-                            name = "Onion",
-                            quantityType = 4,
-                            amount = 1,
+            repeat(2000) {
+                recipesDao.addRecipe(
+                    RecipeEntity(
+                        name = "Test recipe :) $it",
+                        recipe = "heje",
+                        creationDate = System.currentTimeMillis(),
+                        cookingTime = 5,
+                        categoryId = 1,
+                        tagIds = emptyList(),
+                        ingredients = listOf(
+                            IngredientDbModel(
+                                name = "Tomatos",
+                                quantityType = 3,
+                                amount = 4,
+                            ),
+                            IngredientDbModel(
+                                name = "Onion",
+                                quantityType = 4,
+                                amount = 1,
+                            )
                         )
                     )
-                )0
-            )
+                )
+            }
+
         }
-    }*/
+    }
 
     fun observeAllRecipes(): Flow<PagingData<RecipeModel>> {
-        return getTestData()
-/*
+        // return getTestData()
+
         return Pager(
-            PagingConfig(10),
+            PagingConfig(10, jumpThreshold = 40),
             null,
             recipesDao.observeAllRecipes().map {
                 it.toDomainModel()
             }
                 .asPagingSourceFactory()
-        ).flow*/
+        ).flow
     }
 
+    suspend fun getRecipeForId(id: Int): RecipeModel? {
+        return withContext(Dispatchers.IO) {
+            recipesDao.getRecipeForId(id)?.toDomainModel()
+        }
+    }
 
     private fun getTestData(): Flow<PagingData<RecipeModel>> {
         val entity1 = RecipeModel(

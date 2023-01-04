@@ -19,9 +19,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sc.easycooking.recipes.impl.presentation.RecipesDetailsViewModel
+import com.sc.easycooking.recipes.impl.presentation.models.details.ScreenContentState
 import com.sc.easycooking.view_ext.insets.WrapWithColoredSystemBars
 
 @Composable
@@ -30,13 +34,18 @@ internal fun RecipeDetailsRoute(
     viewModel: RecipesDetailsViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
 ) {
-    RecipeDetailsScreen(modifier, onBackClick)
+    RecipeDetailsScreen(
+        modifier = modifier,
+        screenState = viewModel.observeScreenState().collectAsState().value,
+        onBackClick = onBackClick
+    )
 }
 
 @Suppress("SameParameterValue")
 @Composable
 internal fun RecipeDetailsScreen(
     modifier: Modifier = Modifier,
+    screenState: ScreenContentState,
     onBackClick: () -> Unit,
 ) {
 
@@ -50,12 +59,23 @@ internal fun RecipeDetailsScreen(
                 .fillMaxSize()
                 .padding(WindowInsets.statusBars.asPaddingValues()),
             topBar = {
+
+                val textForTitle = remember {
+                    derivedStateOf {
+                        if (screenState.editMode) {
+                            "Edit"
+                        } else {
+                            "New recipe"
+                        }
+                    }
+                }
+
                 TopAppBar(
                     modifier = Modifier.background(MaterialTheme.colorScheme.background),
                     title = {
                         Text(
                             modifier = Modifier,
-                            text = "Details"
+                            text = textForTitle.value,
                         )
                     },
                     navigationIcon = {

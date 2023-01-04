@@ -62,6 +62,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.view_ext.anims.durationMiddle
@@ -74,6 +75,7 @@ import com.sc.easycooking.recipes.impl.presentation.RecipesListViewModel
 import com.sc.easycooking.recipes.impl.presentation.models.RecipeUiModelShort
 import com.sc.easycooking.recipes.impl.ui.paging.items
 import com.sc.easycooking.view_ext.insets.WrapWithColoredSystemBars
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 internal fun RecipesListRoute(
@@ -112,7 +114,7 @@ internal fun RecipesListScreen(
                     },
                     floatingActionButton = {
                         FloatingActionButton(
-                            onClick = { navigateToDetails(null, true) },
+                            onClick = { navigateToDetails(null, false) },
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
                         ) {
                             Icon(
@@ -124,7 +126,6 @@ internal fun RecipesListScreen(
                 )
             },
         ) { innerPadding ->
-
             val lazyPagingItems = viewModel.observeAllRecipes().collectAsLazyPagingItems()
 
             val configuration = LocalConfiguration.current
@@ -150,7 +151,7 @@ internal fun RecipesListScreen(
                     .testTag("recipeList:feed"),
             ) {
                 recipeListScreen(
-                    navigateToDetails,
+                    { id -> navigateToDetails(id, true)},
                     lazyPagingItems,
                     selectedItems.value,
                     columns,
@@ -173,7 +174,7 @@ internal fun RecipesListScreen(
 }
 
 private fun LazyStaggeredGridScope.recipeListScreen(
-    navigateToDetails: (id: Int?, edit: Boolean) -> Unit,
+    navigateToDetails: (id: Int) -> Unit,
     lazyItems: LazyPagingItems<RecipeUiModelShort>,
     selectedItems: Set<RecipeUiModelShort>,
     columns: Int,

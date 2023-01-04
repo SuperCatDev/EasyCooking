@@ -14,6 +14,10 @@ internal class RecipesInteractorImpl @Inject constructor(
         return repository.observeAllRecipes()
     }
 
+    override suspend fun getRecipeForId(id: Int): RecipeModel? {
+        return repository.getRecipeForId(id)
+    }
+
     override suspend fun deleteRecipesByIds(ids: Set<Int>) {
         repository.deleteRecipesByIds(ids)
     }

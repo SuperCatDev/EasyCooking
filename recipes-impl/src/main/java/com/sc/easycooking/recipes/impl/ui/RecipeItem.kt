@@ -37,7 +37,7 @@ internal fun RecipeItem(
     item: RecipeUiModelShort?,
     selectedItems: Set<RecipeUiModelShort>,
     viewModel: RecipesListViewModel,
-    navigateToDetails: (id: Int?, edit: Boolean) -> Unit,
+    navigateToDetails: (id: Int) -> Unit,
 ) {
     val selected = selectedItems.contains(item)
     val hapticFeedback = LocalHapticFeedback.current
@@ -64,7 +64,7 @@ internal fun RecipeItem(
                 onClick = {
                     item?.let { selectedItem ->
                         viewModel.clickedAt(selectedItem)
-                        navigateToDetails(selectedItem.id, false)
+                        navigateToDetails(selectedItem.id)
                     }
                 },
                 onLongClick = {
