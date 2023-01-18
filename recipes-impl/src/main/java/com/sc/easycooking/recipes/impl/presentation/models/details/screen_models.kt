@@ -13,16 +13,12 @@ data class ScreenContentState(
 sealed class MutableScreenContentState {
     object None : MutableScreenContentState()
     object Loading : MutableScreenContentState()
-    data class Content(val state: ContentState) : MutableScreenContentState()
+    data class Content(val currentModel: CreateModel) : MutableScreenContentState()
     data class Error(val message: String) : MutableScreenContentState()
 }
 
-sealed class ContentState {
-    data class EditContent(val currentModel: RecipeModel) : ContentState()
-    data class CreateContent(val createModel: CreateModel) : ContentState()
-}
-
 data class CreateModel(
+    val id: Int?,
     val name: String?,
     val recipe: String?,
     val cookingTime: Long?,
@@ -32,6 +28,7 @@ data class CreateModel(
 ) {
     companion object {
         val EMPTY = CreateModel(
+            id = null,
             name = null,
             recipe = null,
             cookingTime = null,
@@ -39,5 +36,18 @@ data class CreateModel(
             tags = emptyList(),
             ingredients = emptyList(),
         )
+
+
+        fun fromRecipe(recipe: RecipeModel): CreateModel {
+            return CreateModel(
+                id = recipe.id,
+                name = recipe.name,
+                recipe = recipe.recipe,
+                cookingTime = recipe.cookingTime,
+                category = recipe.category,
+                tags = recipe.tags,
+                ingredients = recipe.ingredients,
+            )
+        }
     }
 }
