@@ -8,4 +8,5 @@ interface RecipesInteractor {
     fun observeAllRecipes(): Flow<PagingData<RecipeModel>>
     suspend fun getRecipeForId(id: Int): RecipeModel?
     suspend fun deleteRecipesByIds(ids: Set<Int>)
+    suspend fun updateOrSave(recipe: RecipeModel): Int
 }

@@ -96,6 +96,7 @@ internal fun RecipeItem(
                     shape = RoundedCornerShape(roundSize),
                 )
                 .clip(RoundedCornerShape(roundSize))
+                .fillMaxWidth()
         ) {
             Column(
                 modifier = Modifier

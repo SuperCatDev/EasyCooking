@@ -21,4 +21,13 @@ internal class RecipesInteractorImpl @Inject constructor(
     override suspend fun deleteRecipesByIds(ids: Set<Int>) {
         repository.deleteRecipesByIds(ids)
     }
+
+    override suspend fun updateOrSave(recipe: RecipeModel): Int {
+        if (repository.checkIfExist(recipe.id)) {
+            repository.update(recipe)
+            return recipe.id
+        }
+
+        return repository.add(recipe)
+    }
 }

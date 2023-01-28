@@ -11,6 +11,7 @@ import com.sc.easycooking.recipes.api.models.QuantityType
 import com.sc.easycooking.recipes.api.models.RecipeCategory
 import com.sc.easycooking.recipes.api.models.RecipeModel
 import com.sc.easycooking.recipes.api.models.RecipeTag
+import com.sc.easycooking.recipes.impl.repository.mappers.toDbModel
 import com.sc.easycooking.recipes.impl.repository.mappers.toDomainModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -232,5 +233,17 @@ internal class RecipesRepository @Inject constructor(private val recipesDao: Rec
 
     suspend fun deleteRecipesByIds(ids: Set<Int>) {
         recipesDao.deleteByIds(ids)
+    }
+
+    suspend fun add(recipe: RecipeModel): Int {
+        return recipesDao.addRecipe(recipe.toDbModel()).toInt()
+    }
+
+    suspend fun checkIfExist(recipeId: Int): Boolean {
+        return recipesDao.getRecipeForId(recipeId) != null
+    }
+
+    suspend fun update(recipe: RecipeModel) {
+        recipesDao.update(recipe.toDbModel())
     }
 }

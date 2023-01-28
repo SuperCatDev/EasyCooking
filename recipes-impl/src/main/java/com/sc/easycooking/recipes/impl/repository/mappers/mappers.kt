@@ -11,6 +11,7 @@ import java.lang.IllegalArgumentException
 
 fun RecipeModel.toDbModel(): RecipeEntity {
     return RecipeEntity(
+        id = id,
         name = name,
         recipe = recipe,
         creationDate = creationDate,

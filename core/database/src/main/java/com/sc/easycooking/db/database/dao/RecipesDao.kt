@@ -21,14 +21,18 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.sc.easycooking.db.database.model.RecipeEntity
 
 @Dao
 interface RecipesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addRecipe(recipe: RecipeEntity)
+    suspend fun addRecipe(recipe: RecipeEntity): Long
 
-    @Query("SELECT * FROM recipes ORDER BY creation_date")
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun update(recipe: RecipeEntity)
+
+    @Query("SELECT * FROM recipes ORDER BY creation_date DESC")
     fun observeAllRecipes(): DataSource.Factory<Int, RecipeEntity>
 
     @Query("DELETE FROM recipes WHERE id in (:ids)")

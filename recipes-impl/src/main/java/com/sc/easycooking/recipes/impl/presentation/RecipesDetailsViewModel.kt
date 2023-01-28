@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.sc.easycooking.recipes.api.domain.RecipesInteractor
+import com.sc.easycooking.recipes.api.models.RecipeCategory
 import com.sc.easycooking.recipes.api.models.RecipeModel
 import com.sc.easycooking.recipes.api.navigation.RecipeDetailsDestination
 import com.sc.easycooking.recipes.impl.domain.FastAccessDataShare
@@ -14,13 +15,19 @@ import com.sc.easycooking.recipes.impl.presentation.models.details.CreateModel
 import com.sc.easycooking.recipes.impl.presentation.models.details.MutableScreenContentState
 import com.sc.easycooking.recipes.impl.presentation.models.details.ScreenContentState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.skip
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,16 +59,46 @@ internal class RecipesDetailsViewModel @Inject constructor(
 
         viewModelScope.launch {
             screenContentState
-                .debounce(300)
-                .onEach {
-                    Log.e("VVV", "State update: $it")
-                    delay(1000)
+                .drop(1)
+                .debounce(600)
+                .filter {
+                    it.mutableState is MutableScreenContentState.Content
+                }
+                .map {
+                    (it.mutableState as MutableScreenContentState.Content).currentModel
+                }
+                .filter { model ->
+                    verifyModelIsReadyToSave(model)
+                }
+                .onEach { modelToSave ->
+                    Log.e("VVV", "State update: $modelToSave")
+                    val id = interactor.updateOrSave(modelToRecipe(modelToSave))
+
+                    withContext(Dispatchers.Main) {
+                        updateContentModel { modelToUpdate ->
+                            modelToUpdate.copy(id = id)
+                        }
+                    }
                 }
                 .collect()
         }
     }
 
     fun observeScreenState(): StateFlow<ScreenContentState> = screenContentState
+
+    fun timeChanged(time: String) {
+        val timeLong = time.toLongOrNull()
+
+        updateContentModel {
+            it.copy(cookingTime = timeLong)
+        }
+    }
+
+    fun nameChanged(newName: String) {
+        updateContentModel {
+            it.copy(name = newName)
+        }
+    }
 
     fun recipeChanged(newRecipe: String) {
         updateContentModel {
@@ -135,6 +172,27 @@ internal class RecipesDetailsViewModel @Inject constructor(
                 mutableState = change(oldContent)
             )
         }
+    }
+
+    private fun verifyModelIsReadyToSave(model: CreateModel): Boolean {
+        return model.name != null && model.recipe != null
+    }
+
+    private fun modelToRecipe(model: CreateModel): RecipeModel {
+        check(model.name != null)
+        check(model.recipe != null)
+
+        return RecipeModel(
+            id = model.id ?: 0,
+            name = model.name,
+            recipe = model.recipe,
+            cookingTime = model.cookingTime ?: 0,
+            // todo with category
+            category = model.category ?: RecipeCategory.MAIN,
+            tags = model.tags,
+            ingredients = model.ingredients,
+            creationDate = System.currentTimeMillis()
+        )
     }
 }
 
