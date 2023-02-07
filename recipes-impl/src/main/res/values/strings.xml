@@ -22,6 +22,7 @@
     <string name="tag_fruits">Fruits</string>
     <string name="tag_bakery">Bakery</string>
 
+    <string name="category_no">Not selected</string>
     <string name="category_cold_appetizer">Cold appetizer</string>
     <string name="category_hot_appetizer">Hot appetizer</string>
     <string name="category_soup">Soup</string>
@@ -30,10 +31,19 @@
     <string name="category_desert">Desert</string>
     <string name="category_cheese">Cheese</string>
 
+    <string name="details_title_new">New recipe</string>
+    <string name="details_title_edit">Edit</string>
+
+    <string name="block_recipe_name">Recipe name</string>
+    <string name="block_recipe">Recipe</string>
+    <string name="block_recipe_cooking_time">Cooking time</string>
+    <string name="block_recipe_category">Category</string>
+
     <string name="clear_selection">Clear selection</string>
     <string name="add_new_recipe">Add new recipe</string>
     <string name="delete">Delete</string>
     <string name="add_favorite">Add to Favorites</string>
     <string name="settings">Settings</string>
     <string name="search">Search</string>
+    <string name="back">Back</string>
 </resources>

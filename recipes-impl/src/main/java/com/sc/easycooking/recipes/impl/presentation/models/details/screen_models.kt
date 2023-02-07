@@ -1,39 +1,35 @@
 package com.sc.easycooking.recipes.impl.presentation.models.details
 
 import com.sc.easycooking.recipes.api.models.IngredientModel
-import com.sc.easycooking.recipes.api.models.RecipeCategory
 import com.sc.easycooking.recipes.api.models.RecipeTag
 
-data class ScreenContentState(
+internal data class ScreenContentState(
     val editMode: Boolean,
     val mutableState: MutableScreenContentState,
 )
 
-sealed class MutableScreenContentState {
+internal sealed class MutableScreenContentState {
     object None : MutableScreenContentState()
     object Loading : MutableScreenContentState()
     data class Content(val currentModel: CreateModel) : MutableScreenContentState()
     data class Error(val message: String) : MutableScreenContentState()
 }
 
-data class CreateModel(
+internal data class CreateModel(
     val id: Int?,
     val name: String?,
     val recipe: String?,
     val cookingTime: Long?,
-    val category: RecipeCategory?,
+    val category: RecipeCategoryScreenState,
     val tags: List<RecipeTag>,
     val ingredients: List<IngredientModel>,
+)
+
+internal data class RecipeCategoryScreenState(
+    val text: String,
+    val id: Int,
 ) {
     companion object {
-        val EMPTY = CreateModel(
-            id = null,
-            name = null,
-            recipe = null,
-            cookingTime = null,
-            category = null,
-            tags = emptyList(),
-            ingredients = emptyList(),
-        )
+        const val NO_ID = -1
     }
 }

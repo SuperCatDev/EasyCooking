@@ -10,6 +10,22 @@ import com.sc.easycooking.recipes.impl.presentation.models.IngredientUiModel
 import com.sc.easycooking.recipes.impl.presentation.models.RecipeUiModelShort
 import com.sc.easycooking.recipes.impl.presentation.models.RecipeUiTag
 
+internal fun RecipeCategory.localizedName(context: Context): String {
+    return context.getString(localizedResource())
+}
+
+internal fun RecipeCategory.localizedResource(): Int {
+    return when (this) {
+        RecipeCategory.COLD_APPETIZER -> R.string.category_cold_appetizer
+        RecipeCategory.HOT_APPETIZER -> R.string.category_hot_appetizer
+        RecipeCategory.SOUP -> R.string.category_soup
+        RecipeCategory.SALAD -> R.string.category_salad
+        RecipeCategory.MAIN -> R.string.category_main
+        RecipeCategory.DESERT -> R.string.category_desert
+        RecipeCategory.CHEESE -> R.string.category_cheese
+    }
+}
+
 internal fun RecipeModel.toUiModelShort(context: Context): RecipeUiModelShort {
     return RecipeUiModelShort(
         id = id,

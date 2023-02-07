@@ -4,7 +4,6 @@ package com.sc.easycooking.recipes.impl.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -33,16 +32,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sc.easycooking.recipes.impl.R
 import com.sc.easycooking.recipes.impl.presentation.RecipesDetailsViewModel
 import com.sc.easycooking.recipes.impl.presentation.models.details.MutableScreenContentState
 import com.sc.easycooking.recipes.impl.presentation.models.details.ScreenContentState
@@ -84,15 +80,10 @@ internal fun RecipeDetailsScreen(
                 .fillMaxSize()
                 .padding(WindowInsets.statusBars.asPaddingValues()),
             topBar = {
-
-                val textForTitle = remember {
-                    derivedStateOf {
-                        if (screenState.editMode) {
-                            "Edit"
-                        } else {
-                            "New recipe"
-                        }
-                    }
+                val textForTitle = if (screenState.editMode) {
+                    stringResource(id = R.string.details_title_edit)
+                } else {
+                    stringResource(id = R.string.details_title_new)
                 }
 
                 TopAppBar(
@@ -100,14 +91,14 @@ internal fun RecipeDetailsScreen(
                     title = {
                         Text(
                             modifier = Modifier,
-                            text = textForTitle.value,
+                            text = textForTitle,
                         )
                     },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
                             Icon(
                                 Icons.Default.ArrowBack,
-                                contentDescription = "Back"
+                                contentDescription = stringResource(id = R.string.back)
                             )
                         }
                     },
@@ -153,7 +144,7 @@ private fun RecipeDetailsContent(
 }
 
 @Composable
-private fun ColumnScope.NameInput(
+private fun NameInput(
     viewModel: RecipesDetailsViewModel,
     content: MutableScreenContentState.Content,
 ) {
@@ -164,7 +155,7 @@ private fun ColumnScope.NameInput(
             modifier = Modifier
                 .padding(horizontal = 16.dp),
             value = nameText ?: "",
-            label = { Text(text = "Name") },
+            label = { Text(text = stringResource(id = R.string.block_recipe_name)) },
             onValueChange = {
                 viewModel.nameChanged(it)
             }
@@ -173,7 +164,7 @@ private fun ColumnScope.NameInput(
 }
 
 @Composable
-private fun ColumnScope.RecipeInput(
+private fun RecipeInput(
     viewModel: RecipesDetailsViewModel,
     content: MutableScreenContentState.Content,
 ) {
@@ -184,7 +175,7 @@ private fun ColumnScope.RecipeInput(
             modifier = Modifier
                 .padding(horizontal = 16.dp),
             value = recipeText ?: "",
-            label = { Text(text = "Recipe") },
+            label = { Text(text = stringResource(id = R.string.block_recipe)) },
             onValueChange = {
                 viewModel.recipeChanged(it)
             }
@@ -193,7 +184,7 @@ private fun ColumnScope.RecipeInput(
 }
 
 @Composable
-private fun ColumnScope.CookingTimeInput(
+private fun CookingTimeInput(
     viewModel: RecipesDetailsViewModel,
     content: MutableScreenContentState.Content,
 ) {
@@ -205,7 +196,10 @@ private fun ColumnScope.CookingTimeInput(
 
         val cookingTime = content.currentModel.cookingTime?.toString() ?: ""
 
-        Text(modifier = Modifier.align(Alignment.CenterVertically), text = "Cooking time: ")
+        Text(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            text = "${stringResource(id = R.string.block_recipe_cooking_time)}: "
+        )
         Spacer(modifier = Modifier.width(16.dp))
         SelectionContainer {
             OutlinedTextField(
@@ -220,29 +214,15 @@ private fun ColumnScope.CookingTimeInput(
 }
 
 @Composable
-private fun ColumnScope.CategorySelector(
+private fun CategorySelector(
     viewModel: RecipesDetailsViewModel,
     content: MutableScreenContentState.Content,
 ) {
-    val listItems = listOf(
-        "FavoritesFavoritesFavoritesFavoritesFavoritesFavoritesFavorites",
-        "Options",
-        "Settings",
-        "Share",
-        "Favorites",
-        "Options",
-        "SettingsFavoritesFavoritesFavoritesFavoritesFavorites",
-        "Share",
-        "FavoritesFavoritesFavoritesFavoritesFavoritesFavorites",
-        "Options",
-        "Settings",
-        "Share"
-    )
-    var selectedItem by remember {
-        mutableStateOf(listItems[0])
-    }
-
-    ExposedDropdownMenu("Category", listItems, selectedItem) { index, _ ->
-        selectedItem = listItems[index]
+    ExposedDropdownMenu(
+        label = stringResource(id = R.string.block_recipe_category),
+        items = viewModel.categoriesTexts,
+        selected = content.currentModel.category.text
+    ) { index, _ ->
+        viewModel.selectedCategory(index)
     }
 }

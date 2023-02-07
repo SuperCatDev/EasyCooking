@@ -1,6 +1,7 @@
 package com.sc.easycooking.recipes.impl.presentation
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -12,12 +13,13 @@ import com.sc.easycooking.recipes.api.navigation.RecipeDetailsDestination
 import com.sc.easycooking.recipes.impl.domain.FastAccessDataShare
 import com.sc.easycooking.recipes.impl.domain.share_keys.SELECTED_ITEM_SHARE
 import com.sc.easycooking.recipes.impl.presentation.mappers.RecipeCreateModelMapper
+import com.sc.easycooking.recipes.impl.presentation.mappers.localizedName
 import com.sc.easycooking.recipes.impl.presentation.models.details.CreateModel
 import com.sc.easycooking.recipes.impl.presentation.models.details.MutableScreenContentState
+import com.sc.easycooking.recipes.impl.presentation.models.details.RecipeCategoryScreenState
 import com.sc.easycooking.recipes.impl.presentation.models.details.ScreenContentState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -26,7 +28,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.skip
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -52,7 +53,15 @@ internal class RecipesDetailsViewModel @Inject constructor(
         )
     )
 
+    private val categoriesToSelect: List<RecipeCategoryScreenState>
+
+    val categoriesTexts: List<String>
+
     init {
+        val categories = fillCategories(application)
+        categoriesToSelect = categories.first
+        categoriesTexts = categories.second
+
         if (editMode) {
             initEditMode()
         } else {
@@ -108,6 +117,12 @@ internal class RecipesDetailsViewModel @Inject constructor(
         }
     }
 
+    fun selectedCategory(index: Int) {
+        updateContentModel {
+            it.copy(category = categoriesToSelect[index])
+        }
+    }
+
     private fun initEditMode() {
         require(itemId != null)
 
@@ -145,7 +160,7 @@ internal class RecipesDetailsViewModel @Inject constructor(
     private fun initCreateMode() {
         updateMutableState {
             MutableScreenContentState.Content(
-                currentModel = CreateModel.EMPTY,
+                currentModel = mapper.emptyCreateModel(),
             )
         }
     }
@@ -177,7 +192,20 @@ internal class RecipesDetailsViewModel @Inject constructor(
     }
 
     private fun verifyModelIsReadyToSave(model: CreateModel): Boolean {
-        return model.name != null && model.recipe != null
+        return model.name != null && model.recipe != null && model.category.id != RecipeCategoryScreenState.NO_ID
+    }
+
+    private fun fillCategories(context: Context): Pair<List<RecipeCategoryScreenState>, List<String>> {
+        val categoriesToSelectMutable = mutableListOf<RecipeCategoryScreenState>()
+        val categoriesTextsMutable = mutableListOf<String>()
+
+        RecipeCategory.values().forEach {
+            val localizedText = it.localizedName(context)
+            categoriesToSelectMutable.add(RecipeCategoryScreenState(localizedText, it.id))
+            categoriesTextsMutable.add(localizedText)
+        }
+
+        return categoriesToSelectMutable to categoriesTextsMutable
     }
 }
 

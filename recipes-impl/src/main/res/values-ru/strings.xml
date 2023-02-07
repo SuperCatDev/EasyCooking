@@ -21,6 +21,7 @@
     <string name="tag_fruits">Фрукты</string>
     <string name="tag_bakery">Выпечка</string>
 
+    <string name="category_no">Не выбрана</string>
     <string name="category_cold_appetizer">Холодная закуска</string>
     <string name="category_hot_appetizer">Горячая закауска</string>
     <string name="category_soup">Суп</string>
@@ -29,10 +30,19 @@
     <string name="category_desert">Десерт</string>
     <string name="category_cheese">Сыр</string>
 
+    <string name="details_title_new">Новый рецепт</string>
+    <string name="details_title_edit">Редактирование</string>
+
+    <string name="block_recipe_name">Название рецепта</string>
+    <string name="block_recipe">Рецепт</string>
+    <string name="block_recipe_cooking_time">Время готовки</string>
+    <string name="block_recipe_category">Категория</string>
+
     <string name="clear_selection">Очистить выделение</string>
     <string name="add_new_recipe">Добавить новый рецепт</string>
     <string name="delete">Удалить</string>
     <string name="add_favorite">Добавить в избранные</string>
     <string name="settings">Настройки</string>
     <string name="search">Поиск</string>
+    <string name="back">Назад</string>
 </resources>
