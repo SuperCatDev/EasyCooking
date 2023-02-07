@@ -11,6 +11,7 @@ import com.sc.easycooking.recipes.api.models.RecipeModel
 import com.sc.easycooking.recipes.api.navigation.RecipeDetailsDestination
 import com.sc.easycooking.recipes.impl.domain.FastAccessDataShare
 import com.sc.easycooking.recipes.impl.domain.share_keys.SELECTED_ITEM_SHARE
+import com.sc.easycooking.recipes.impl.presentation.mappers.RecipeCreateModelMapper
 import com.sc.easycooking.recipes.impl.presentation.models.details.CreateModel
 import com.sc.easycooking.recipes.impl.presentation.models.details.MutableScreenContentState
 import com.sc.easycooking.recipes.impl.presentation.models.details.ScreenContentState
@@ -33,6 +34,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class RecipesDetailsViewModel @Inject constructor(
     private val interactor: RecipesInteractor,
+    private val mapper: RecipeCreateModelMapper,
     private val savedStateHandle: SavedStateHandle,
     private val fastShare: FastAccessDataShare,
     application: Application,
@@ -72,7 +74,7 @@ internal class RecipesDetailsViewModel @Inject constructor(
                 }
                 .onEach { modelToSave ->
                     Log.e("VVV", "State update: $modelToSave")
-                    val id = interactor.updateOrSave(modelToRecipe(modelToSave))
+                    val id = interactor.updateOrSave(mapper.fromCreateToRecipeModel(modelToSave))
 
                     withContext(Dispatchers.Main) {
                         updateContentModel { modelToUpdate ->
@@ -115,7 +117,7 @@ internal class RecipesDetailsViewModel @Inject constructor(
         if (modelFromFastShare != null) {
             updateMutableState {
                 MutableScreenContentState.Content(
-                    currentModel = CreateModel.fromRecipe(modelFromFastShare)
+                    currentModel = mapper.fromRecipeToCreate(modelFromFastShare)
                 )
             }
         } else {
@@ -132,7 +134,7 @@ internal class RecipesDetailsViewModel @Inject constructor(
                 } else {
                     updateMutableState {
                         MutableScreenContentState.Content(
-                            currentModel = CreateModel.fromRecipe(modelFromRepo)
+                            currentModel = mapper.fromRecipeToCreate(modelFromRepo)
                         )
                     }
                 }
@@ -176,23 +178,6 @@ internal class RecipesDetailsViewModel @Inject constructor(
 
     private fun verifyModelIsReadyToSave(model: CreateModel): Boolean {
         return model.name != null && model.recipe != null
-    }
-
-    private fun modelToRecipe(model: CreateModel): RecipeModel {
-        check(model.name != null)
-        check(model.recipe != null)
-
-        return RecipeModel(
-            id = model.id ?: 0,
-            name = model.name,
-            recipe = model.recipe,
-            cookingTime = model.cookingTime ?: 0,
-            // todo with category
-            category = model.category ?: RecipeCategory.MAIN,
-            tags = model.tags,
-            ingredients = model.ingredients,
-            creationDate = System.currentTimeMillis()
-        )
     }
 }
 

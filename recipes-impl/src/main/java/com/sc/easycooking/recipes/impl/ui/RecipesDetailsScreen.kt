@@ -4,6 +4,7 @@ package com.sc.easycooking.recipes.impl.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -33,7 +34,10 @@ import androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sc.easycooking.recipes.impl.presentation.RecipesDetailsViewModel
 import com.sc.easycooking.recipes.impl.presentation.models.details.MutableScreenContentState
 import com.sc.easycooking.recipes.impl.presentation.models.details.ScreenContentState
+import com.sc.easycooking.recipes.impl.ui.menu.ExposedDropdownMenu
 import com.sc.easycooking.view_ext.insets.WrapWithColoredSystemBars
 import kotlinx.coroutines.Dispatchers
 
@@ -137,59 +142,107 @@ private fun RecipeDetailsContent(
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
-        val nameText = content.currentModel.name
-
-        SelectionContainer(Modifier.fillMaxWidth()) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp),
-                value = nameText ?: "",
-                label = { Text(text = "Name") },
-                onValueChange = {
-                    viewModel.nameChanged(it)
-                }
-            )
-        }
-
+        NameInput(viewModel, content)
         Spacer(modifier = Modifier.height(16.dp))
-
-        val recipeText = content.currentModel.recipe
-
-        SelectionContainer(Modifier.fillMaxWidth()) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp),
-                value = recipeText ?: "",
-                label = { Text(text = "Recipe") },
-                onValueChange = {
-                    viewModel.recipeChanged(it)
-                }
-            )
-        }
-
+        RecipeInput(viewModel, content)
         Spacer(modifier = Modifier.height(16.dp))
+        CookingTimeInput(viewModel, content)
+        Spacer(modifier = Modifier.height(16.dp))
+        CategorySelector(viewModel, content)
+    }
+}
 
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
+@Composable
+private fun ColumnScope.NameInput(
+    viewModel: RecipesDetailsViewModel,
+    content: MutableScreenContentState.Content,
+) {
+    val nameText = content.currentModel.name
 
-            val cookingTime = content.currentModel.cookingTime?.toString() ?: ""
-
-            Text(modifier = Modifier.align(Alignment.CenterVertically), text = "Cooking time: ")
-            Spacer(modifier = Modifier.width(16.dp))
-            SelectionContainer {
-                OutlinedTextField(
-                    value = cookingTime,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    onValueChange = {
-                        viewModel.timeChanged(it)
-                    }
-                )
+    SelectionContainer(Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            modifier = Modifier
+                .padding(horizontal = 16.dp),
+            value = nameText ?: "",
+            label = { Text(text = "Name") },
+            onValueChange = {
+                viewModel.nameChanged(it)
             }
+        )
+    }
+}
+
+@Composable
+private fun ColumnScope.RecipeInput(
+    viewModel: RecipesDetailsViewModel,
+    content: MutableScreenContentState.Content,
+) {
+    val recipeText = content.currentModel.recipe
+
+    SelectionContainer(Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            modifier = Modifier
+                .padding(horizontal = 16.dp),
+            value = recipeText ?: "",
+            label = { Text(text = "Recipe") },
+            onValueChange = {
+                viewModel.recipeChanged(it)
+            }
+        )
+    }
+}
+
+@Composable
+private fun ColumnScope.CookingTimeInput(
+    viewModel: RecipesDetailsViewModel,
+    content: MutableScreenContentState.Content,
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+
+        val cookingTime = content.currentModel.cookingTime?.toString() ?: ""
+
+        Text(modifier = Modifier.align(Alignment.CenterVertically), text = "Cooking time: ")
+        Spacer(modifier = Modifier.width(16.dp))
+        SelectionContainer {
+            OutlinedTextField(
+                value = cookingTime,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                onValueChange = {
+                    viewModel.timeChanged(it)
+                }
+            )
         }
     }
+}
 
+@Composable
+private fun ColumnScope.CategorySelector(
+    viewModel: RecipesDetailsViewModel,
+    content: MutableScreenContentState.Content,
+) {
+    val listItems = listOf(
+        "FavoritesFavoritesFavoritesFavoritesFavoritesFavoritesFavorites",
+        "Options",
+        "Settings",
+        "Share",
+        "Favorites",
+        "Options",
+        "SettingsFavoritesFavoritesFavoritesFavoritesFavorites",
+        "Share",
+        "FavoritesFavoritesFavoritesFavoritesFavoritesFavorites",
+        "Options",
+        "Settings",
+        "Share"
+    )
+    var selectedItem by remember {
+        mutableStateOf(listItems[0])
+    }
 
+    ExposedDropdownMenu("Category", listItems, selectedItem) { index, _ ->
+        selectedItem = listItems[index]
+    }
 }

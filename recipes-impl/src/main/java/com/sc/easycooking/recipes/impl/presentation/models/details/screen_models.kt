@@ -2,7 +2,6 @@ package com.sc.easycooking.recipes.impl.presentation.models.details
 
 import com.sc.easycooking.recipes.api.models.IngredientModel
 import com.sc.easycooking.recipes.api.models.RecipeCategory
-import com.sc.easycooking.recipes.api.models.RecipeModel
 import com.sc.easycooking.recipes.api.models.RecipeTag
 
 data class ScreenContentState(
@@ -36,18 +35,5 @@ data class CreateModel(
             tags = emptyList(),
             ingredients = emptyList(),
         )
-
-
-        fun fromRecipe(recipe: RecipeModel): CreateModel {
-            return CreateModel(
-                id = recipe.id,
-                name = recipe.name,
-                recipe = recipe.recipe,
-                cookingTime = recipe.cookingTime,
-                category = recipe.category,
-                tags = recipe.tags,
-                ingredients = recipe.ingredients,
-            )
-        }
     }
 }
