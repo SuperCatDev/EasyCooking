@@ -2,7 +2,6 @@ package com.sc.easycooking.recipes.impl.presentation
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -82,7 +81,6 @@ internal class RecipesDetailsViewModel @Inject constructor(
                     verifyModelIsReadyToSave(model)
                 }
                 .onEach { modelToSave ->
-                    Log.e("VVV", "State update: $modelToSave")
                     val id = interactor.updateOrSave(mapper.fromCreateToRecipeModel(modelToSave))
 
                     withContext(Dispatchers.Main) {

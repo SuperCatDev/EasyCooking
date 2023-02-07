@@ -2,7 +2,6 @@ package com.sc.easycooking.recipes.impl.presentation
 
 import android.app.Application
 import android.os.Parcelable
-import android.util.Log
 import android.util.LruCache
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -33,10 +32,6 @@ internal class RecipesListViewModel @Inject constructor(
     private val fastShare: FastAccessDataShare,
     application: Application,
 ) : AndroidViewModel(application) {
-
-    init {
-        Log.e("VVV", "create RecipesListViewModel: ${hashCode()}")
-    }
 
     private val lruCache = LruCache<Int, RecipeModel>(100)
 
