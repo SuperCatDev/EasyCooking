@@ -122,7 +122,7 @@ internal data class FlatDropdownMenuPositionProvider(
         val toTop = anchorBounds.top - contentOffsetY - popupContentSize.height
         val toCenter = anchorBounds.top - popupContentSize.height / 2
         val toDisplayBottom = windowSize.height - popupContentSize.height - verticalMargin
-        val y = sequenceOf(toBottom, toTop, toCenter, toDisplayBottom).firstOrNull {
+        val y = sequenceOf(toBottom, toDisplayBottom, toCenter, toTop).firstOrNull {
             it >= verticalMargin &&
                     it + popupContentSize.height <= windowSize.height - verticalMargin
         } ?: toTop
@@ -183,7 +183,7 @@ internal fun FlatDropdownMenuContent(
             if (false isTransitioningTo true) {
                 // Dismissed to expanded
                 tween(
-                    durationMillis = 120,
+                    durationMillis = 300,
                     easing = LinearOutSlowInEasing
                 )
             } else {

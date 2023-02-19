@@ -49,7 +49,7 @@ fun ExposedDropdownMenu(
     val interactionSource = remember { MutableInteractionSource() }
     LaunchedEffect(interactionSource) {
         interactionSource.interactions
-            .filter { it is PressInteraction.Press }
+            .filter { it is PressInteraction.Release }
             .collect {
                 expanded = !expanded
             }
