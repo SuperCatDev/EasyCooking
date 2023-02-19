@@ -2,7 +2,6 @@
 
 package com.sc.easycooking.recipes.impl.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,8 +16,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,11 +30,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -75,10 +78,14 @@ internal fun RecipeDetailsScreen(
         navBarColor = MaterialTheme.colorScheme.background,
     ) { innerModifier ->
 
+        val scrollBehavior =
+            TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
         Scaffold(
             modifier = innerModifier
                 .fillMaxSize()
-                .padding(WindowInsets.statusBars.asPaddingValues()),
+                .padding(WindowInsets.statusBars.asPaddingValues())
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 val textForTitle = if (screenState.editMode) {
                     stringResource(id = R.string.details_title_edit)
@@ -87,7 +94,10 @@ internal fun RecipeDetailsScreen(
                 }
 
                 TopAppBar(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                    colors = TopAppBarDefaults.smallTopAppBarColors(
+                        MaterialTheme.colorScheme.background,
+                        MaterialTheme.colorScheme.background
+                    ),
                     title = {
                         Text(
                             modifier = Modifier,
@@ -102,7 +112,7 @@ internal fun RecipeDetailsScreen(
                             )
                         }
                     },
-                    scrollBehavior = pinnedScrollBehavior()
+                    scrollBehavior = scrollBehavior
                 )
             },
             content = { paddingValues: PaddingValues ->
@@ -127,11 +137,14 @@ private fun RecipeDetailsContent(
     content: MutableScreenContentState.Content,
     paddingValues: PaddingValues,
 ) {
+    val scroll = rememberScrollState()
+
     Column(
         modifier = Modifier
             .padding(paddingValues)
             .fillMaxWidth()
             .fillMaxHeight()
+            .verticalScroll(scroll)
     ) {
         NameInput(viewModel, content)
         Spacer(modifier = Modifier.height(16.dp))
